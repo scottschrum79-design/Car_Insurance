@@ -1033,8 +1033,6 @@ function refreshEstimate() {
 
     const adjs = getPolicyAdjustmentsFromDOM();
   const r = computeEstimate(zip, limitPkg, tort, vehicles, termMonths, drivers, adjs);
-  window.__LAST_ESTIMATE__ = r;
-
 
   document.getElementById("estMain").textContent = money(r.monthly) + " / month";
   document.getElementById("estSub").innerHTML =
@@ -1382,7 +1380,6 @@ function renderThreeOptions(payload) {
 
   // Option 1: exactly what they chose (including full coverage status)
   const base1 = computeEstimate(zip, payload.limitPkg, payload.tort, vehicles, termMonths, drivers, adjustments);
-  const base1 = window.__LAST_ESTIMATE__;
 
   // Options 2 & 3: FORCE 15/30/5 + Limited tort, but KEEP vehicles as-is (full coverage status preserved)
   const base23 = computeEstimate(zip, "15/30/5", "limited", vehicles, termMonths, drivers, adjustments);
