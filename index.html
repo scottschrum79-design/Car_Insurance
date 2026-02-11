@@ -257,43 +257,7 @@
             <label for="phone">Phone</label>
             <input id="phone" name="Phone" autocomplete="tel" inputmode="tel" placeholder="(717) 555‑1212" required/>
           </div>
-          <div style="grid-column:1 / -1; margin-top:6px;">
-            <div class="checkRow" style="background:rgba(255,255,255,.03); border:1px solid var(--border);">
-              <input id="smsConsent" type="checkbox" />
-              <div class="checkLabel" style="font-weight:700;">
-                I agree to receive text messages
-              </div>
-              <div class="helper" style="margin:0;">
-                By checking this box, you agree to receive recurring automated SMS/text messages from <b>717auto.com</b> at the number provided for quote and marketing purposes.
-                Consent is not required to purchase. Msg &amp; data rates may apply. Reply <b>STOP</b> to cancel, <b>HELP</b> for help.
-              </div>
-            </div>
-
-            <div class="actionsRow" style="margin-top:10px;">
-              <button id="sendCodeBtn" type="button" class="miniBtn">Send verification code</button>
-              <button id="resendCodeBtn" type="button" class="miniBtn" disabled>Resend code</button>
-              <span id="cooldownText" class="helper" style="margin:6px 0 0;"></span>
-            </div>
-
-            <div class="row" style="margin-top:8px;">
-              <div>
-                <label for="smsCode">Verification code</label>
-                <input id="smsCode" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" />
-                <div class="helper">Enter the 6‑digit code we text you.</div>
-              </div>
-              <div style="display:flex; align-items:flex-end;">
-                <button id="verifyCodeBtn" type="button" class="miniBtn" style="width:100%; padding:12px 14px;" disabled>Verify &amp; show my quote</button>
-              </div>
-            </div>
-
-            <div id="smsStatus" class="helper" style="margin-top:8px;"></div>
-            <div id="recaptcha-container"></div>
-          </div>
-
-        
-
-        
-          <div>
+<div>
             <label for="email">Email</label>
             <input id="email" name="Email" type="email" autocomplete="email" />
             <div class="helper">Optional (we’ll use SMS to verify and display your quote on-screen).</div>
@@ -505,16 +469,21 @@
 
 <label for="notes">Anything else we should know?</label>
         <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, # drivers, garaging details, etc."></textarea>
-
-        <button class="btn" type="submit" id="submitBtn">Send &amp; show estimate</button>
-
-        <p class="small" style="margin-top:10px;">
-          By submitting, you agree we may contact you about insurance options. No coverage is bound by this form.
-        </p>
+        <p class="small" style="margin-top:10px;">Verify your phone to view your estimate. After verification, we'll send your details to our office so we can follow up.</p>
       </form>
     </div>
 
-    <div class="card">
+    <div class="card" id="lockedEstimateCard" style="display:none;">
+      <h2 style="margin:0 0 8px; font-size:18px;">Estimated premium</h2>
+      <div class="resultBox">
+        <p class="sub">Verify your phone by text to view your estimate and quote options.</p>
+        <div class="big" style="opacity:.6;">Locked</div>
+        <p class="sub">We’ll text a one-time code. After verification, your estimate will appear here.</p>
+      </div>
+    </div>
+
+    <div class="card" id="estimateCard" style="display:none;">
+
       <h2 style="margin:0 0 8px; font-size:18px;">Estimated premium</h2>
       <div class="resultBox">
         <p class="sub">Based on PA zip base rates + selected limits + tort option + vehicle value.</p>
@@ -540,7 +509,47 @@
 
       <div class="divider"></div>
       <p class="small">
-        <span class="mono">How it’s calculated (simple version)</span><br/>
+     
+        <div class="sectionTitle">Verify by text to view your estimate</div>
+
+          <div style="grid-column:1 / -1; margin-top:0px;">
+            <div class="checkRow" style="background:rgba(255,255,255,.03); border:1px solid var(--border);">
+              <input id="smsConsent" type="checkbox" />
+              <div class="checkLabel" style="font-weight:700;">
+                I agree to receive text messages
+              </div>
+              <div class="helper" style="margin:0;">
+                By checking this box, you agree to receive recurring automated SMS/text messages from <b>717auto.com</b> at the number provided for quote and marketing purposes.
+                Consent is not required to purchase. Msg &amp; data rates may apply. Reply <b>STOP</b> to cancel, <b>HELP</b> for help.
+              </div>
+            </div>
+
+            <div class="actionsRow" style="margin-top:10px;">
+              <button id="sendCodeBtn" type="button" class="miniBtn">Send verification code</button>
+              <button id="resendCodeBtn" type="button" class="miniBtn" disabled>Resend code</button>
+              <span id="cooldownText" class="helper" style="margin:6px 0 0;"></span>
+            </div>
+
+            <div class="row" style="margin-top:8px;">
+              <div>
+                <label for="smsCode">Verification code</label>
+                <input id="smsCode" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" />
+                <div class="helper">Enter the 6‑digit code we text you.</div>
+              </div>
+              <div style="display:flex; align-items:flex-end;">
+                <button id="verifyCodeBtn" type="button" class="miniBtn" style="width:100%; padding:12px 14px;" disabled>Verify &amp; show my quote</button>
+              </div>
+            </div>
+
+            <div id="smsStatus" class="helper" style="margin-top:8px;"></div>
+            <div id="recaptcha-container"></div>
+          </div>
+
+        
+
+        
+          
+   <span class="mono">How it’s calculated (simple version)</span><br/>
         • Start with annual base rates for the zip code (defaults are BI 100/300, PD 100k, SLL 300k, FPB 10k, Comp/Coll 500 deductibles).<br/>
         • Apply a liability limit factor, PD scaling, and a tort multiplier.<br/>
         • Scale Comp/Coll using vehicle value (heuristic).<br/>
@@ -561,15 +570,15 @@
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
   // TODO: paste your Firebase Web App config here (Project settings → Your apps → Web app)
-   const firebaseConfig = {
-    apiKey: "AIzaSyAqU4FT733SpBxjsPfoDwtArkcZfAOyh8k",
-    authDomain: "auto-sms-verify.firebaseapp.com",
-    projectId: "auto-sms-verify",
-    storageBucket: "auto-sms-verify.firebasestorage.app",
-    messagingSenderId: "676515662964",
-    appId: "1:676515662964:web:6358c02b398664cd8b9521",
-    measurementId: "G-3K835K066L"
-  };
+ const firebaseConfig = {
+  apiKey: "AIzaSyAqU4FT733SpBxjsPfoDwtArkcZfAOyh8k",
+  authDomain: "auto-sms-verify.firebaseapp.com",
+  projectId: "auto-sms-verify",
+  storageBucket: "auto-sms-verify.firebasestorage.app",
+  messagingSenderId: "676515662964",
+  appId: "1:676515662964:web:6358c02b398664cd8b9521",
+  measurementId: "G-3K835K066L"
+};
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -957,6 +966,12 @@ function pulsePrices(){
 }
 
 function refreshEstimate() {
+  // Don’t display premiums until phone is verified
+  if (!window.__VERIFIED__) {
+    document.getElementById("hiddenEstimate").value = "";
+    return;
+  }
+
   const zip = (document.getElementById("zip").value || "").trim();
   const limitPkg = document.getElementById("limitPkg").value;
   const tort = document.getElementById("tort").value;
@@ -1337,6 +1352,9 @@ function renderThreeOptions(payload) {
   const opt2 = applyDeductibleToEstimate(base23, 1000, anyFull);
   const opt3 = applyDeductibleToEstimate(base23, 500, anyFull);
 
+  // Store for emailing / later use
+  window.__LAST_OPTIONS__ = { anyFull, opt1, opt2, opt3, chosen: { limitPkg: payload.limitPkg, tort: payload.tort } };
+
   const mount = document.getElementById("verifiedResults");
   if (!mount) return;
 
@@ -1378,80 +1396,10 @@ function renderThreeOptions(payload) {
 
 // Intercept submit: send SMS verification code, then show quote options after verification
 document.getElementById("leadForm").addEventListener("submit", async function(e) {
+  // We don't submit the form directly. Instead we verify by SMS first, then email the form after verification.
   e.preventDefault();
-
-  // Ensure estimate is current before "sending"
-  refreshEstimate();
-  const est = document.getElementById("hiddenEstimate").value;
-  if (!est) {
-    alert("Please enter a valid PA zip and vehicle value to generate an estimate before submitting.");
-    return;
-  }
-
-  const phoneRaw = (document.getElementById("phone")?.value || "").trim();
-  if (!phoneRaw) {
-    alert("Please enter a phone number.");
-    return;
-  }
-
-  const consent = !!document.getElementById("smsConsent")?.checked;
-  if (!consent) {
-    alert("Please check the box to consent to receive a verification text message.");
-    return;
-  }
-
-  const payload = {
-    submittedAt: Date.now(),
-    firstName: (document.getElementById("firstName")?.value || "").trim(),
-    lastName: (document.getElementById("lastName")?.value || "").trim(),
-    phone: phoneRaw,
-    email: (document.getElementById("email")?.value || "").trim(),
-    street: (document.getElementById("street")?.value || "").trim(),
-    city: (document.getElementById("city")?.value || "").trim(),
-    state: (document.getElementById("state")?.value || "").trim(),
-    zip: (document.getElementById("zip")?.value || "").trim(),
-    tort: (document.getElementById("tort")?.value || "limited").trim(),
-    limitPkg: (document.getElementById("limitPkg")?.value || "100/300").trim(),
-    termMonths: parseInt(document.getElementById("term")?.value || "6", 10),
-    drivers: getDriversFromDOM(),
-    vehicles: getVehiclesFromDOM(),
-    adjustments: getPolicyAdjustmentsFromDOM(),
-    notes: (document.getElementById("notes")?.value || "").trim(),
-    hiddenEstimate: est
-  };
-
-  window.__PENDING_QUOTE_PAYLOAD__ = payload;
-
-  const smsStatus = document.getElementById("smsStatus");
-  const sendBtn = document.getElementById("sendCodeBtn");
-  const verifyBtn = document.getElementById("verifyCodeBtn");
-  const codeEl = document.getElementById("smsCode");
-
-  function setStatus(msg, cls){
-    if (!smsStatus) return;
-    smsStatus.className = "helper " + (cls || "");
-    smsStatus.innerHTML = msg;
-  }
-
-  if (!window.__SMS__?.sendSmsCode) {
-    setStatus("❌ SMS verification is not configured. Paste your Firebase config in the script near the bottom of this file.", "bad");
-    return;
-  }
-
-  // If they haven't clicked "Send verification code" yet, do it automatically on submit:
-  try {
-    if (sendBtn) sendBtn.disabled = true;
-    setStatus("Sending verification code…", "");
-    const e164 = await window.__SMS__.sendSmsCode(phoneRaw, payload);
-    setStatus(`✅ Verification code sent to <b>${e164}</b>. Enter the code to see your quote options.`, "ok");
-    if (verifyBtn) verifyBtn.disabled = false;
-    if (codeEl) codeEl.focus();
-    startResendCooldown(60);
-  } catch (err) {
-    console.error(err);
-    setStatus("❌ Could not send SMS code. Check Firebase Auth (Phone enabled), reCAPTCHA, and your authorized domains.", "bad");
-    if (sendBtn) sendBtn.disabled = false;
-  }
+  // Mirror clicking "Send verification code"
+  document.getElementById("sendCodeBtn")?.click();
 });
 
 // Buttons: Send / Resend / Verify + cooldown timer
@@ -1520,9 +1468,33 @@ document.getElementById("leadForm").addEventListener("submit", async function(e)
       const form = document.getElementById("leadForm");
       if (!form || !form.action) return;
       const fd = new FormData(form);
-      // Add computed estimate/choices in case they weren't in form fields
-      fd.set("Hidden Estimate", payload?.hiddenEstimate || "");
-      fd.set("Verified Phone (E.164)", (window.__SMS__?.toE164US ? window.__SMS__.toE164US(payload?.phone) : (payload?.phone || "")));
+      // Add computed estimate/choices
+      fd.set("Estimated Premium", (document.getElementById("hiddenEstimate")?.value || ""));
+      fd.set("Verified Phone (E.164)", (window.__SMS__?.toE164US ? window.__SMS__.toE164US(document.getElementById("phone")?.value || "") : (document.getElementById("phone")?.value || "")));
+
+      // Include the 3 displayed options (if available)
+      const o = window.__LAST_OPTIONS__;
+      if (o?.opt1) {
+        fd.set("Option 1 - Monthly", String(Math.round(o.opt1.monthly || 0)));
+        fd.set("Option 1 - Pay in Full", String(Math.round(o.opt1.payInFull || 0)));
+        fd.set("Option 1 - Limits", o.chosen?.limitPkg || "");
+        fd.set("Option 1 - Tort", o.chosen?.tort || "");
+      }
+      if (o?.opt2) {
+        fd.set("Option 2 - Monthly", String(Math.round(o.opt2.monthly || 0)));
+        fd.set("Option 2 - Pay in Full", String(Math.round(o.opt2.payInFull || 0)));
+        fd.set("Option 2 - Limits", "15/30/5");
+        fd.set("Option 2 - Tort", "limited");
+        fd.set("Option 2 - Deductible", o.anyFull ? "1000" : "N/A");
+      }
+      if (o?.opt3) {
+        fd.set("Option 3 - Monthly", String(Math.round(o.opt3.monthly || 0)));
+        fd.set("Option 3 - Pay in Full", String(Math.round(o.opt3.payInFull || 0)));
+        fd.set("Option 3 - Limits", "15/30/5");
+        fd.set("Option 3 - Tort", "limited");
+        fd.set("Option 3 - Deductible", o.anyFull ? "500" : "N/A");
+      }
+
       fd.set("_captcha", "false");
       await fetch(form.action, { method:"POST", body: fd, mode:"no-cors" });
     }catch(e){
@@ -1539,6 +1511,14 @@ document.getElementById("leadForm").addEventListener("submit", async function(e)
       const ok = await window.__SMS__.verifySmsCode(code);
       if (!ok) throw new Error("verify failed");
       setStatus("✅ Phone verified. Showing your quote options below.", "ok");
+      window.__VERIFIED__ = true;
+      // Reveal estimate panel now that verification is complete
+      const locked = document.getElementById("lockedEstimateCard");
+      const estCard = document.getElementById("estimateCard");
+      if (locked) locked.style.display = "none";
+      if (estCard) estCard.style.display = "";
+      // Compute and display estimate now
+      refreshEstimate();
       const payload = window.__PENDING_QUOTE_PAYLOAD__ || (() => {
         try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
       })();
