@@ -954,6 +954,8 @@ const vehicleCount = (() => {
     payInFull: termPremiumAdj * 0.85,
     monthly: (isFinite(termMonths) && termMonths > 0) ? (termPremiumAdj / termMonths) : (termPremiumAdj / 6),
     liabilityPortion: liabilityPortionAdj,
+    termMonths: termMonths,
+    physicalPortion: physPortionAdj,
     physPortion: physPortionAdj,
     usedZip: ZIP_RATES[zip] ? zip : "Unlisted",
     driverCount,
