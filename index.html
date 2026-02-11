@@ -51,7 +51,7 @@
 
   .helper { font-size:12px; color:var(--muted); margin-top:6px; line-height:1.35; }
   .helper b { color:var(--text); font-weight:700; }
-
+  .helper_small { font-size:10px; color:var(--muted); margin-top:6px; line-height:1.35; font-weight: 400;}
 
   .sectionTitle { margin: 14px 0 8px; font-size: 14px; color: var(--text); font-weight: 700; letter-spacing: .2px; }
   .repeatWrap { display:flex; flex-direction:column; gap:10px; }
@@ -421,10 +421,10 @@
 <label for="limitPkg">Liability limits</label>
 
 <select id="limitPkg" name="Liability limits" required>
-              <option value="15/30/5">15/30/5</option>
+              <option value="15/30/5" selected>15/30/5</option>
               <option value="25/50/25">25/50/25</option>
               <option value="50/100/50">50/100/50</option>
-              <option value="100/300/100" selected>100/300/100</option>
+              <option value="100/300/100">100/300/100</option>
               <option value="250/500/250">250/500/250</option>
             </select>
 
@@ -443,7 +443,20 @@
 
 
 <div class="row">
-          
+  <div>
+   <div>
+    <label for="deductible">Comp/Coll Deductible</label>
+    <select id="deductible" name="Deductible (Comp/Coll)" required>
+      <option value="250">250</option>
+      <option value="500" selected>500</option>
+      <option value="1000">1000</option>
+      <option value="1500">1500</option>
+      <option value="2000">2000</option>
+    </select>
+    <div class="helper">Applies only if any vehicle is marked “Full coverage”.</div>
+  </div>
+</div>
+         
 <div>
   <div class="helper termStatic">Policy term: <b>6 months</b></div>
   <label for="term">Policy term</label>
@@ -468,22 +481,24 @@
         </div>
 
 <label for="notes">Anything else we should know?</label>
-        <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, # drivers, garaging details, etc."></textarea>
-        <p class="small" style="margin-top:10px;">Verify your phone to view your estimate. After verification, we'll send your details to our office so we can follow up.</p>
+        <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, business use, garaging details, etc."></textarea>
+        
       
 <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
 
   <div class="checkRow">
     <input type="checkbox" id="smsConsent">
-    <div class="checkLabel">
-      I agree to receive text messages
-      <div class="helper">
-        By checking this box, you agree to receive recurring automated SMS/text messages 
-        from 717auto.com for quote and marketing purposes. Consent is not required to purchase.
+    <span class="checkLabel">
+      I agree to having my information verified
+     </span>
+	<div class="helper_small">
+        By checking this box, you agree to have your auto insurance information verfied by Ephrata Insurance and/or it's affiliates; 
+	which may include insurance history, driving record, and other factors. You will receive an automated SMS/text messages 
+        from 717auto.com to verify it is you. No purchased is required.
         Msg & data rates may apply. Reply STOP to cancel, HELP for help.
       </div>
     </div>
-  </div>
+  
 
   <button type="button" class="btn" id="sendCodeBtn">Send verification code</button>
 
@@ -502,6 +517,9 @@
 
   <div id="smsStatus" class="helper"></div>
 
+  <!-- Firebase phone auth uses this (invisible) reCAPTCHA mount -->
+  <div id="recaptcha-container"></div>
+
 </div>
 
 
@@ -517,78 +535,62 @@
       </div>
     </div>
 
-    <div class="card" id="estimateCard" style="display:none;">
+ <div class="card" id="estimateCard" style="display:none;">
 
       <h2 style="margin:0 0 8px; font-size:18px;">Estimated premium</h2>
-      <div class="resultBox">
-        <p class="sub">Based on PA zip base rates + selected limits + tort option + vehicle value.</p>
-        <div class="big" id="estMain">$—</div>
-        <p class="sub" id="estSub">Enter details to see an estimate.</p>
+ <div class="resultBox">
+        <p class="sub">Your Selection (option 1)</p>
+        <div class="big" id="estMain1">$—</div>
+        <p class="sub" id="estSub1">Enter details to see an estimate.</p>
 
         <div class="kpi">
-          <div><b>Monthly (approx.)</b><span id="kpiMonthly">$—</span></div>
-          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm">$—</span></div>
-          <div><b>Liability portion</b><span id="kpiLiab">$—</span></div>
-          <div><b>Comp/Coll portion</b><span id="kpiPhys">$—</span></div>
+          <div><b>Monthly (approx.)</b><span id="kpiMonthly1">$—</span></div>
+          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm1">$—</span></div>
+          <div><b>Liability portion</b><span id="kpiLiab1">$—</span></div>
+          <div><b>Comp/Coll portion</b><span id="kpiPhys1">$—</span></div>
         </div>
+</div>
 
-        <div class="divider"></div>
+<div class="resultBox">
+        <p class="sub">Lower Liability (option 2)</p>
+        <div class="big" id="estMain2">$—</div>
+        <p class="sub" id="estSub2">Enter details to see an estimate.</p>
+
+        <div class="kpi">
+          <div><b>Monthly (approx.)</b><span id="kpiMonthly2">$—</span></div>
+          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm2">$—</span></div>
+          <div><b>Liability portion</b><span id="kpiLiab2">$—</span></div>
+          <div><b>Comp/Coll portion</b><span id="kpiPhys2">$—</span></div>
+        </div>
+</div>
+
+<div class="resultBox">
+        <p class="sub">Higher Coverage (option 3)</p>
+        <div class="big" id="estMain3">$—</div>
+        <p class="sub" id="estSub3">Enter details to see an estimate.</p>
+
+        <div class="kpi">
+          <div><b>Monthly (approx.)</b><span id="kpiMonthly3">$—</span></div>
+          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm3">$—</span></div>
+          <div><b>Liability portion</b><span id="kpiLiab3">$—</span></div>
+          <div><b>Comp/Coll portion</b><span id="kpiPhys3">$—</span></div>
+        </div>
+</div>
+ 
+<div class="divider"></div>
         <p class="small">
           <span class="warn">Important:</span> This tool is meant to feel “realistic,” but it’s still a simplified estimator.
           Final premium depends on drivers, vehicles, garaging address, driving record, credit/insurance score, discounts, etc.
         </p>
-      </div>
+ </div>
 
-<!-- Shows after email is verified via magic link -->
-      <div id="verifiedResults" style="display:none; margin-top:14px;"></div>
 
-      <div class="divider"></div>
-      <p class="small">
-     
-        <div class="sectionTitle">Verify by text to view your estimate</div>
-
-          <div style="grid-column:1 / -1; margin-top:0px;">
-            <div class="checkRow" style="background:rgba(255,255,255,.03); border:1px solid var(--border);">
-              <input id="smsConsent" type="checkbox" />
-              <div class="checkLabel" style="font-weight:700;">
-                I agree to receive text messages
-              </div>
-              <div class="helper" style="margin:0;">
-                By checking this box, you agree to receive recurring automated SMS/text messages from <b>717auto.com</b> at the number provided for quote and marketing purposes.
-                Consent is not required to purchase. Msg &amp; data rates may apply. Reply <b>STOP</b> to cancel, <b>HELP</b> for help.
-              </div>
-            </div>
-
-            <div class="actionsRow" style="margin-top:10px;">
-              <button id="sendCodeBtn" type="button" class="miniBtn">Send verification code</button>
-              <button id="resendCodeBtn" type="button" class="miniBtn" disabled>Resend code</button>
-              <span id="cooldownText" class="helper" style="margin:6px 0 0;"></span>
-            </div>
-
-            <div class="row" style="margin-top:8px;">
-              <div>
-                <label for="smsCode">Verification code</label>
-                <input id="smsCode" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" />
-                <div class="helper">Enter the 6‑digit code we text you.</div>
-              </div>
-              <div style="display:flex; align-items:flex-end;">
-                <button id="verifyCodeBtn" type="button" class="miniBtn" style="width:100%; padding:12px 14px;" disabled>Verify &amp; show my quote</button>
-              </div>
-            </div>
-
-            <div id="smsStatus" class="helper" style="margin-top:8px;"></div>
-            <div id="recaptcha-container"></div>
-          </div>
 
         
 
         
           
-   <span class="mono">How it’s calculated (simple version)</span><br/>
-        • Start with annual base rates for the zip code (defaults are BI 100/300, PD 100k, SLL 300k, FPB 10k, Comp/Coll 500 deductibles).<br/>
-        • Apply a liability limit factor, PD scaling, and a tort multiplier.<br/>
-        • Scale Comp/Coll using vehicle value (heuristic).<br/>
-        • Convert to 6‑month or 12‑month display.
+   
       </p>
     </div>
   </div>
@@ -679,8 +681,27 @@
   }
 
   async function verifySmsCode(code){
+    // === DEV BYPASS (for testing only) ===
+    // Enter DEV_BYPASS_CODE to bypass SMS verification WITHOUT sending/confirming an SMS.
+    // Turn on/off by:
+    //  - Opening locally (file://) or on localhost, OR
+    //  - Setting: localStorage.setItem("DEV_SMS_BYPASS","1")  (disable with "0" or removeItem)
+    const DEV_BYPASS_CODE = "999999";
+    const DEV_MODE =
+      (window.location.protocol === "file:" ||
+       window.location.hostname === "localhost" ||
+       window.location.hostname === "127.0.0.1") ||
+      (localStorage.getItem("DEV_SMS_BYPASS") === "1");
+
+    const entered = String(code||"").trim();
+
+    if (DEV_MODE && entered === DEV_BYPASS_CODE) {
+      // Simulate successful verification
+      return true;
+    }
+
     if (!confirmationResult) throw new Error("No confirmation state");
-    const cred = await confirmationResult.confirm(String(code||"").trim());
+    const cred = await confirmationResult.confirm(entered);
     return !!cred?.user;
   }
 
@@ -701,22 +722,22 @@ const LIMIT_FACTORS_BI = {
 // Tort multipliers (simplified) derived from the “Limited Tort Factors” table.
 const TORT_FACTORS = {
   limited: {
-    BI: 0.85,
-    PD: 0.98,
+    BI: 0.80,
+    PD: 0.95,
     SLL: 0.85,
     FPB: 0.85,
     UM: 0.85,
     UIM: 0.85,
-    COMP: 0.85,
-    COLL: 1.00
+    COMP: .95,
+    COLL: .95
   },
   full: {
-    BI: 1.00,
+    BI: 1.15,
     PD: 1.00,
     SLL: 1.00,
     FPB: 1.00,
-    UM: 1.00,
-    UIM: 1.00,
+    UM: 1.0,
+    UIM: 1.0,
     COMP: 1.00,
     COLL: 1.00
   }
@@ -864,18 +885,43 @@ function computeEstimate(zip, limitPkg, tort, vehicles, termMonths, drivers, adj
   const lims = parseLimits(limitPkg);
   const pdF = pdLimitToFactor(lims.pd);
 
-  // Driver factor (kept intentionally mild for “realistic” estimates)
-  const ages = (drivers || []).map(d => ageFromDob(d.dob)).filter(a => a !== null);
-  const driverCount = Math.max(1, (drivers || []).length || 1);
-  const youngest = ages.length ? Math.min(...ages) : null;
 
-  let driverMult = 1 + 0.06 * Math.max(0, driverCount - 1);
-  if (youngest !== null) {
-    if (youngest < 21) driverMult += 0.30;
-    else if (youngest < 25) driverMult += 0.18;
-    else if (youngest >= 70) driverMult += 0.08;
-  }
-  driverMult = clamp(driverMult, 0.85, 1.75);
+
+  // Driver factor (kept intentionally mild for “realistic” estimates)
+const ages = (drivers || []).map(d => ageFromDob(d.dob)).filter(a => a !== null);
+const driverCount = Math.max(1, (drivers || []).length || 1);
+
+const youngest = ages.length ? Math.min(...ages) : null;
+const under21 = ages.filter(a => a < 21).length;
+const under25 = ages.filter(a => a < 25).length;
+
+function youngestMult(age) {
+  if (age === null) return 1.00;
+  if (age < 16) return 4.00;
+  if (age < 18) return 3.20;
+  if (age < 21) return 2.60;
+  if (age < 25) return 1.90;
+  if (age < 30) return 1.25;
+  if (age >= 70) return 1.20;
+  return 1.00;
+}
+
+// Base mult based on youngest driver
+let driverMult = youngestMult(youngest);
+
+// Extra drivers (non-youthful) still add some exposure
+driverMult *= (1 + 0.10 * Math.max(0, driverCount - 1));
+
+// Additional youthful stacking (this is what makes it “a lot more”)
+driverMult *= (1 + 0.35 * Math.max(0, under21 - 1));
+driverMult *= (1 + 0.18 * Math.max(0, (under25 - under21))); // 21–24
+
+driverMult = clamp(driverMult, 0.85, 5.00);
+
+const liabDriverMult = driverMult;                  // keep liability as-is
+const physDriverMult = 1 + (driverMult - 1) * 1.25; // youth hits comp/coll harder
+
+
 
   const termFactor = (termMonths === 12) ? 1.00 : 0.50; // 6 mo = 0.50, 12 mo = 1.00
 
@@ -898,8 +944,9 @@ function computeEstimate(zip, limitPkg, tort, vehicles, termMonths, drivers, adj
     const annual_FPB = base.FPB_10k * tortF.FPB * driverMult * milesF;
 
     const wantsFull = (v.fullCoverage !== false);
-    const annual_COMP = wantsFull ? (base.Comp_500 * vvF * tortF.COMP * milesF) : 0;
-    const annual_COLL = wantsFull ? (base.Coll_500 * vvF * tortF.COLL * milesF) : 0;
+    const annual_COMP = wantsFull ? (base.Comp_500 * vvF * tortF.COMP * liabDriverMult * milesF) : 0;
+    const annual_COLL = wantsFull ? (base.Coll_500 * vvF * tortF.COLL * physDriverMult * milesF) : 0;
+
 
     annualLiab += (annual_SLL + annual_BI + annual_PD + annual_FPB);
     // Only include Comp/Coll if the vehicle is marked as Full Coverage
@@ -1002,63 +1049,84 @@ function pulsePrices(){
   });
 }
 
+function setOptionUI(n, r, subtitle){
+  document.getElementById(`estMain${n}`).textContent = money(r.monthly);   // or money(r.termPremium) if you prefer
+  document.getElementById(`estSub${n}`).textContent = subtitle || "";
+
+  document.getElementById(`kpiTerm${n}`).textContent = money(r.payInFull);
+  document.getElementById(`kpiMonthly${n}`).textContent = money(r.monthly);
+  document.getElementById(`kpiLiab${n}`).textContent = money(r.liabilityPortion);
+  document.getElementById(`kpiPhys${n}`).textContent = money(r.physPortion);
+}
+
 function refreshEstimate() {
   // Don’t display premiums until phone is verified
   if (!window.__VERIFIED__) {
-    document.getElementById("hiddenEstimate").value = "";
+    const hidden = document.getElementById("hiddenEstimate");
+    if (hidden) hidden.value = "";
     return;
   }
 
-  const zip = (document.getElementById("zip").value || "").trim();
-  const limitPkg = document.getElementById("limitPkg").value;
-  const tort = document.getElementById("tort").value;
-  const termMonths = parseInt(document.getElementById("term").value, 10);
+  const zip = (document.getElementById("zip")?.value || "").trim();
+  const limitPkg = document.getElementById("limitPkg")?.value || "";
+  const tort = document.getElementById("tort")?.value || "limited";
+  const termMonths = parseInt(document.getElementById("term")?.value || "6", 10);
+
+  const deductible = parseInt(document.getElementById("deductible")?.value || "500", 10);
 
   const vehicles = getVehiclesFromDOM();
   const drivers = getDriversFromDOM();
 
   // Validate zip + at least one vehicle value
-  const firstValue = vehicles[0] ? parseFloat(String(vehicles[0].carValue || "").replace(/[^0-9.]/g, "")) : NaN;
+  const firstValue = vehicles[0]
+    ? parseFloat(String(vehicles[0].carValue || "").replace(/[^0-9.]/g, ""))
+    : NaN;
 
   if (!zip.match(/^\d{5}$/) || !isFinite(firstValue) || firstValue <= 0) {
-    document.getElementById("estMain").textContent = "$—";
-    document.getElementById("estSub").textContent = "Enter a valid PA zip and at least one vehicle value.";
-    document.getElementById("kpiTerm").textContent = "$—";
-    document.getElementById("kpiMonthly").textContent = "$—";
-    document.getElementById("kpiLiab").textContent = "$—";
-    document.getElementById("kpiPhys").textContent = "$—";
-    document.getElementById("hiddenEstimate").value = "";
+    // Keep the 3 option boxes blank
+    ["1","2","3"].forEach(n => {
+      const main = document.getElementById(`estMain${n}`);
+      const sub  = document.getElementById(`estSub${n}`);
+      if (main) main.textContent = "$—";
+      if (sub)  sub.textContent  = "Enter a valid PA zip and at least one vehicle value.";
+      ["Monthly","Term","Liab","Phys"].forEach(k => {
+        const el = document.getElementById(`kpi${k}${n}`);
+        if (el) el.textContent = "$—";
+      });
+    });
+    const hidden = document.getElementById("hiddenEstimate");
+    if (hidden) hidden.value = "";
     return;
   }
 
-    const adjs = getPolicyAdjustmentsFromDOM();
-  const r = computeEstimate(zip, limitPkg, tort, vehicles, termMonths, drivers, adjs);
+  const adjs = getPolicyAdjustmentsFromDOM();
+  const anyFull = hasAnyFullCoverage(vehicles);
 
-  document.getElementById("estMain").textContent = money(r.monthly) + " / month";
-  document.getElementById("estSub").innerHTML =
-    `Pay in full for <b>${termMonths}</b> months (save 15%): <b>${money(r.payInFull)}</b>` +
-    ` &nbsp;•&nbsp; Base zip: <span class="mono">${r.usedZip}</span>` +
-    ` &nbsp;•&nbsp; Drivers: <b>${r.driverCount}</b>, Vehicles: <b>${r.vehicleCount}</b>.`;
 
-  document.getElementById("kpiTerm").textContent = money(r.payInFull);
-  document.getElementById("kpiMonthly").textContent = money(r.monthly);
-  document.getElementById("kpiLiab").textContent = money(r.liabilityPortion);
-  document.getElementById("kpiPhys").textContent = money(r.physPortion);
+  // Option 1: user selections
+  const base1 = computeEstimate(zip, limitPkg, tort, vehicles, termMonths, drivers, adjs);
+
+  // Option 2: preset
+  const base2 = computeEstimate(zip, "15/30/5", "limited", vehicles, termMonths, drivers, adjs);
+
+  // Option 3: preset
+  const base3 = computeEstimate(zip, "100/300/100", "full", vehicles, termMonths, drivers, adjs);
+
+  const opt1 = applyDeductibleToEstimate(base1, deductible, anyFull);
+  const opt2 = applyDeductibleToEstimate(base2, 1000, anyFull);
+  const opt3 = applyDeductibleToEstimate(base3, 500, anyFull);
+
+  setOptionUI(1, opt1, `Selected: ${limitPkg}, ${tort} tort, $${deductible} deductibles`);
+  setOptionUI(2, opt2, `Preset: 15/30/5, limited tort, $1000 deductibles`);
+  setOptionUI(3, opt3, `Preset: 100/300/100, full tort, $500 deductibles`);
+
+  // Hidden field (for FormSubmit / email) – store Option 1 numbers
+  const hidden = document.getElementById("hiddenEstimate");
+  if (hidden) {
+    hidden.value = `${money(opt1.monthly)} / mo (Pay-in-full: ${money(opt1.payInFull)})`;
+  }
 
   pulsePrices();
-
-  // Hidden estimate text for email
-  const lines = [];
-  lines.push(`Monthly: ${money(r.monthly)} / month`);
-  lines.push(`Pay-in-full (${termMonths} mo, 15% off): ${money(r.payInFull)}`);
-  lines.push(`Zip used: ${r.usedZip}`);
-  lines.push(`Limits: ${limitPkg}, Tort: ${tort}`);
-  lines.push(`Drivers: ${r.driverCount}${r.youngestAge !== null ? ` (youngest ${r.youngestAge})` : ""}`);
-  lines.push(`Vehicles: ${r.vehicleCount}`);
-  vehicles.forEach((v, idx) => {
-    lines.push(`Vehicle ${idx+1}: ${v.year || ""} ${v.makeModel || ""} | Value ${v.carValue || ""} | Miles ${v.milesClass}`);
-  });
-  document.getElementById("hiddenEstimate").value = lines.join(" | ");
 }
 
 
@@ -1355,81 +1423,38 @@ function applyDeductibleToEstimate(result, ded, anyFullCoverage) {
     };
   }
 
-  // Tune these factors if desired. Baseline assumes $500 deds.
-  const physFactor = (ded === 1000) ? 0.85 : 1.00;
+   // Baseline assumes $500 deductibles.
+  // Tune these if you want a little more/less spread between options.
+  const factors = {
+    250: 1.60,
+    500: 1.35,
+    1000: 1.00,
+    1500: 0.85,
+    2000: 0.75
+  };
+  const physFactor = factors[Number(ded)] ?? 1.00;
 
   const liab = result.liabilityPortion;
-  const phys = result.physicalPortion * physFactor;
+  const physBase =
+    (typeof result.physicalPortion === "number" ? result.physicalPortion :
+     typeof result.physPortion === "number" ? result.physPortion : 0);
+
+  const phys = physBase * physFactor;
   const termPremium = liab + phys;
 
   return {
     ...result,
     liabilityPortion: liab,
     physicalPortion: phys,
+    physPortion: phys,          // keep both fields consistent (your UI uses physPortion)
     termPremium,
     monthly: termPremium / result.termMonths,
     payInFull: termPremium * 0.85,
-    deductible: ded
+    deductible: Number(ded)
   };
 }
 
-function renderThreeOptions(payload) {
-  const { zip, termMonths, drivers, vehicles, adjustments } = payload;
 
-  const anyFull = hasAnyFullCoverage(vehicles);
-
-  // Option 1: exactly what they chose (including full coverage status)
-  const base1 = computeEstimate(zip, payload.limitPkg, payload.tort, vehicles, termMonths, drivers, adjustments);
-
-  // Options 2 & 3: FORCE 15/30/5 + Limited tort, but KEEP vehicles as-is (full coverage status preserved)
-  const base23 = computeEstimate(zip, "15/30/5", "limited", vehicles, termMonths, drivers, adjustments);
-
-  // Deductibles only matter if any vehicle is full coverage.
-  const opt1 = applyDeductibleToEstimate(base1, 500, anyFull);
-  const opt2 = applyDeductibleToEstimate(base23, 1000, anyFull);
-  const opt3 = applyDeductibleToEstimate(base23, 500, anyFull);
-
-  // Store for emailing / later use
-  window.__LAST_OPTIONS__ = { anyFull, opt1, opt2, opt3, chosen: { limitPkg: payload.limitPkg, tort: payload.tort } };
-
-  const mount = document.getElementById("verifiedResults");
-  if (!mount) return;
-
-  function money(x){ return "$" + Math.round(x).toLocaleString(); }
-
-  const dedLabel1 = anyFull ? "$500" : "N/A (liability only)";
-  const dedLabel2 = anyFull ? "$1,000" : "N/A (liability only)";
-  const dedLabel3 = anyFull ? "$500" : "N/A (liability only)";
-
-  mount.style.display = "block";
-  mount.innerHTML = `
-    <div class="divider"></div>
-    <h3 style="margin:0 0 10px;">Verified quote options</h3>
-
-    <div class="repeatWrap">
-      <div class="repeatCard">
-        <div style="font-weight:800;">Option 1 (Your selections)</div>
-        <div class="small">Limits: <b>${payload.limitPkg}</b> • Tort: <b>${payload.tort}</b> • Deductible: <b>${dedLabel1}</b></div>
-        <div style="margin-top:8px; font-size:20px; font-weight:900;">${money(opt1.monthly)} / mo</div>
-        <div class="small">Pay-in-full: <b>${money(opt1.payInFull)}</b></div>
-      </div>
-
-      <div class="repeatCard">
-        <div style="font-weight:800;">Option 2</div>
-        <div class="small">Limits: <b>15/30/5</b> • Tort: <b>Limited</b> • Deductible: <b>${dedLabel2}</b></div>
-        <div style="margin-top:8px; font-size:20px; font-weight:900;">${money(opt2.monthly)} / mo</div>
-        <div class="small">Pay-in-full: <b>${money(opt2.payInFull)}</b></div>
-      </div>
-
-      <div class="repeatCard">
-        <div style="font-weight:800;">Option 3</div>
-        <div class="small">Limits: <b>15/30/5</b> • Tort: <b>Limited</b> • Deductible: <b>${dedLabel3}</b></div>
-        <div style="margin-top:8px; font-size:20px; font-weight:900;">${money(opt3.monthly)} / mo</div>
-        <div class="small">Pay-in-full: <b>${money(opt3.payInFull)}</b></div>
-      </div>
-    </div>
-  `;
-}
 
 // Intercept submit: send SMS verification code, then show quote options after verification
 document.getElementById("leadForm").addEventListener("submit", async function(e) {
@@ -1806,9 +1831,6 @@ eForCard(card); refreshEstimate(); });
   // initial autofill
   tryAutoFillCarValueForCard(card);
 }
-
-;
-
 </script>
 
 <script>
@@ -1852,6 +1874,39 @@ eForCard(card); refreshEstimate(); });
     syncToDriver1();
     try { refreshEstimate(); } catch(e) { /* ignore */ }
   });
+})();
+</script>
+
+
+<!-- DEV MODE LABEL -->
+<style>
+#devModeBanner{
+  position:fixed;
+  bottom:15px;
+  right:15px;
+  background:#ff4d4d;
+  color:#ffffff;
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:800;
+  font-size:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.35);
+  z-index:9999;
+  display:none;
+  letter-spacing:.5px;
+}
+</style>
+
+<div id="devModeBanner">DEV SMS BYPASS ACTIVE</div>
+
+<script>
+(function(){
+  const isLocal = window.location.protocol === "file:"
+               || window.location.hostname.includes("localhost");
+  const storageFlag = localStorage.getItem("DEV_SMS_BYPASS") === "1";
+  if(isLocal || storageFlag){
+    document.getElementById("devModeBanner").style.display = "inline-block";
+  }
 })();
 </script>
 
