@@ -470,7 +470,42 @@
 <label for="notes">Anything else we should know?</label>
         <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, # drivers, garaging details, etc."></textarea>
         <p class="small" style="margin-top:10px;">Verify your phone to view your estimate. After verification, we'll send your details to our office so we can follow up.</p>
-      </form>
+      
+<div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
+
+  <div class="checkRow">
+    <input type="checkbox" id="smsConsent">
+    <div class="checkLabel">
+      I agree to receive text messages
+      <div class="helper">
+        By checking this box, you agree to receive recurring automated SMS/text messages 
+        from 717auto.com for quote and marketing purposes. Consent is not required to purchase.
+        Msg & data rates may apply. Reply STOP to cancel, HELP for help.
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn" id="sendCodeBtn">Send verification code</button>
+
+  <button type="button" class="btn" id="resendCodeBtn" style="display:none; margin-top:10px;">
+    Resend code
+  </button>
+
+  <div id="cooldownText" class="helper"></div>
+
+  <label for="smsCode">Verification code</label>
+  <input type="text" id="smsCode" maxlength="6" placeholder="Enter 6-digit code">
+
+  <button type="button" class="btn" id="verifyCodeBtn">
+    Verify & show my quote
+  </button>
+
+  <div id="smsStatus" class="helper"></div>
+
+</div>
+
+
+	</form>
     </div>
 
     <div class="card" id="lockedEstimateCard" style="display:none;">
