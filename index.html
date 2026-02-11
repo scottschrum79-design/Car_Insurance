@@ -1505,39 +1505,34 @@ async function sendOrResend(isResend){
     return;
   }
 
-  if (!consent.checked) {
-    setStatus("Please check the consent box first.", "bad");
-    return;
-  }
+  const payload = window.__PENDING_QUOTE_PAYLOAD__ || (() => {
+    try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
+  })();
 
-  const phoneRaw = phoneInput.value.trim();
-  if (!phoneRaw) {
-    setStatus("Please enter your phone number.", "bad");
-    return;
-  }
+  const phoneRaw = (document.getElementById("phone")?.value || "").trim();
+  const consent = !!document.getElementById("smsConsent")?.checked;
+  if (!consent) { alert("Please check the box to consent to receive text messages."); return; }
 
-  disableButtons(true);
-  setStatus(isResend ? "Sending a new code…" : "Sending verification code…");
+  if (!window.__SMS__) { setStatus("❌ SMS not configured.", "bad"); return; }
 
   try {
-    const payload = collectPayload(); // make sure this exists in your file
-    if (isResend) {
-      await window.__SMS__.resendSmsCode();
-    } else {
-      await window.__SMS__.sendSmsCode(phoneRaw, payload);
-    }
-
-    resendBtn.style.display = "block";
-    smsCodeInput.focus();
-    startCooldown(); // if you have a cooldown function
-    setStatus("✅ Code sent. Enter it below to verify.", "ok");
-  } catch (e) {
-    console.error(e);
-    setStatus("❌ Could not send code. Please try again.", "bad");
-  } finally {
-    disableButtons(false);
+    if (sendBtn) sendBtn.disabled = true;
+    if (resendBtn) resendBtn.disabled = true;
+    setStatus(isResend ? "Resending code…" : "Sending code…", "");
+    const e164 = isResend
+      ? await window.__SMS__.resendSmsCode()
+      : await window.__SMS__.sendSmsCode(phoneRaw, payload || {});
+    setStatus(`✅ Code sent to <b>${e164}</b>.`, "ok");
+    if (verifyBtn) verifyBtn.disabled = false;
+    if (codeEl) codeEl.focus();
+    startResendCooldown(60);
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ Could not send SMS code. Double-check Phone Auth + authorized domains.", "bad");
+    if (sendBtn) sendBtn.disabled = false;
   }
 }
+
 
 
 
