@@ -1542,7 +1542,7 @@ async function sendOrResend(isResend){
 
 function submitLeadToFormSubmit(payload){
   console.log("🚀 submitLeadToFormSubmit CALLED");
-  alert("submitLeadToFormSubmit CALLED"); // temporary
+  
   try{
     const form = document.getElementById("leadForm");
     if (!form || !form.action) return;
@@ -1628,9 +1628,7 @@ if (verifyBtn) verifyBtn.addEventListener("click", async () => {
 // ✅ Always send the email, even if payload is null
 submitLeadToFormSubmit(payload || {});
 
-if (payload) {
-  renderThreeOptions(payload);
-}
+
 
 
 
