@@ -688,18 +688,33 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
   }
 
   let recaptchaVerifier = null;
+  let recaptchaWidgetId = null;
   let confirmationResult = null;
 
-  function ensureRecaptcha(){
-    if (recaptchaVerifier) return recaptchaVerifier;
-    // Invisible reCAPTCHA; renders into #recaptcha-container
+ async function ensureRecaptcha(){
+  if (!recaptchaVerifier) {
     recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
       size: "invisible",
       callback: () => {},
-      "expired-callback": () => {}
+      "expired-callback": () => {
+        // if it expires, reset it so the next attempt works
+        try {
+          if (window.grecaptcha && recaptchaWidgetId != null) {
+            window.grecaptcha.reset(recaptchaWidgetId);
+          }
+        } catch(e) {}
+      }
     });
-    return recaptchaVerifier;
   }
+
+  // ✅ Render ONCE only
+  if (recaptchaWidgetId == null) {
+    recaptchaWidgetId = await recaptchaVerifier.render();
+  }
+
+  return recaptchaVerifier;
+}
+
 
   async function sendSmsCode(phoneRaw, payload){
     const phone = toE164US(phoneRaw);
@@ -707,27 +722,22 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
     localStorage.setItem(LS_PHONE, phone);
     localStorage.setItem(LS_PAYLOAD, JSON.stringify(payload));
 
-    const verifier = ensureRecaptcha();
-    // For invisible, render() returns a widgetId; safe to call once
-    try { await verifier.render(); } catch(e) {}
-
+    const verifier = await ensureRecaptcha();
     confirmationResult = await signInWithPhoneNumber(auth, phone, verifier);
     window.__SMS__.confirmationResult = confirmationResult;
     return phone;
   }
 
-  async function resendSmsCode(){
-    const payloadRaw = localStorage.getItem(LS_PAYLOAD);
-    const phone = localStorage.getItem(LS_PHONE);
-    if (!payloadRaw || !phone) throw new Error("Nothing to resend");
-    const payload = JSON.parse(payloadRaw);
+async function resendSmsCode(){
+  const payloadRaw = localStorage.getItem(LS_PAYLOAD);
+  const phone = localStorage.getItem(LS_PHONE);
+  if (!payloadRaw || !phone) throw new Error("Nothing to resend");
+  const payload = JSON.parse(payloadRaw);
 
-    // Clear + recreate reCAPTCHA (more reliable for resends)
-    try { recaptchaVerifier?.clear(); } catch(e) {}
-    recaptchaVerifier = null;
+  // ✅ Reuse the same verifier; do not clear/recreate
+  return await sendSmsCode(phone, payload);
+}
 
-    return await sendSmsCode(phone, payload);
-  }
 
   async function verifySmsCode(code){
     // === DEV BYPASS (for testing only) ===
