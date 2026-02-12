@@ -1623,15 +1623,16 @@ if (verifyBtn) verifyBtn.addEventListener("click", async () => {
       try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
     })();
 
-    if (payload) {
-      renderThreeOptions(payload);
+if (payload) {
+  renderThreeOptions(payload);
+}
 
-      // Send to FormSubmit after verification (optional)
-      submitLeadToFormSubmit(payload);
+// ✅ Always send the email, even if payload is null
+submitLeadToFormSubmit(payload || {});
 
-      // scroll into view
-      document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
-    }
+document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
+
+
   } catch (err) {
     console.warn("Post-verify error (verification already succeeded):", err);
     // Optional: show a softer warning instead of doing nothing:
