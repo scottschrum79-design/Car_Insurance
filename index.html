@@ -1541,6 +1541,8 @@ async function sendOrResend(isResend){
   if (resendBtn) resendBtn.addEventListener("click", () => sendOrResend(true));
 
 function submitLeadToFormSubmit(payload){
+  console.log("🚀 submitLeadToFormSubmit CALLED");
+  alert("submitLeadToFormSubmit CALLED"); // temporary
   try{
     const form = document.getElementById("leadForm");
     if (!form || !form.action) return;
