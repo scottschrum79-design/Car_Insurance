@@ -1597,11 +1597,14 @@ async function sendOrResend(isResend){
     if (verifyBtn) verifyBtn.disabled = false;
     if (codeEl) codeEl.focus();
     startResendCooldown(60);
-  } catch (err) {
-    console.error(err);
-    setStatus("❌ Could not send SMS code. Double-check Phone Auth + authorized domains.", "bad");
-    if (sendBtn) sendBtn.disabled = false;
-  }
+ } catch (err) {
+  console.error(err);
+  const code = err?.code ? String(err.code) : "";
+  const msg  = err?.message ? String(err.message) : "";
+  setStatus(`❌ Could not send SMS code.<br><small>${code} ${msg}</small>`, "bad");
+  if (sendBtn) sendBtn.disabled = false;
+  if (resendBtn) resendBtn.disabled = false;
+}
 }
 
 
