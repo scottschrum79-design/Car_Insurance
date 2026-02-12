@@ -1625,12 +1625,14 @@ if (verifyBtn) verifyBtn.addEventListener("click", async () => {
       try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
     })();
 
+// ✅ Always send the email, even if payload is null
+submitLeadToFormSubmit(payload || {});
+
 if (payload) {
   renderThreeOptions(payload);
 }
 
-// ✅ Always send the email, even if payload is null
-submitLeadToFormSubmit(payload || {});
+
 
 document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
 
