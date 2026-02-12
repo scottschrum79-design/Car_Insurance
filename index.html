@@ -1579,40 +1579,62 @@ async function sendOrResend(isResend){
     }
   }
 
-  if (verifyBtn) verifyBtn.addEventListener("click", async () => {
-    const code = (codeEl?.value || "").trim();
-    if (!code) { alert("Enter the verification code."); return; }
-    try{
-      verifyBtn.disabled = true;
-      setStatus("Verifying…", "");
-      const ok = await window.__SMS__.verifySmsCode(code);
-      if (!ok) throw new Error("verify failed");
-      setStatus("✅ Phone verified. Showing your quote options below.", "ok");
-      window.__VERIFIED__ = true;
-      // Reveal estimate panel now that verification is complete
-      const locked = document.getElementById("lockedEstimateCard");
-      const estCard = document.getElementById("estimateCard");
-      if (locked) locked.style.display = "none";
-      if (estCard) estCard.style.display = "";
-      // Compute and display estimate now
-      refreshEstimate();
-      const payload = window.__PENDING_QUOTE_PAYLOAD__ || (() => {
-        try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
-      })();
-      if (payload) {
-        renderThreeOptions(payload);
-        // Send to FormSubmit after verification (optional)
-        submitLeadToFormSubmit(payload);
-        // scroll into view
-        document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
-      }
-    }catch(err){
-      console.error(err);
-      setStatus("❌ Verification failed. Check the code and try again. You can resend a new code if needed.", "bad");
-      verifyBtn.disabled = false;
+if (verifyBtn) verifyBtn.addEventListener("click", async () => {
+  const code = (codeEl?.value || "").trim();
+  if (!code) { alert("Enter the verification code."); return; }
+
+  verifyBtn.disabled = true;
+  setStatus("Verifying…", "");
+
+  // 1) ONLY Firebase verify here
+  try {
+    const ok = await window.__SMS__.verifySmsCode(code);
+    if (!ok) throw new Error("verify failed");
+  } catch (err) {
+    console.error("SMS verify failed:", err);
+    setStatus("❌ Verification failed. Check the code and try again. You can resend a new code if needed.", "bad");
+    verifyBtn.disabled = false;
+    return;
+  }
+
+  // ✅ If we got here, verification succeeded
+  setStatus("✅ Phone verified. Showing your quote options below.", "ok");
+  window.__VERIFIED__ = true;
+
+  // Reveal estimate panel now that verification is complete
+  const locked = document.getElementById("lockedEstimateCard");
+  const estCard = document.getElementById("estimateCard");
+  if (locked) locked.style.display = "none";
+  if (estCard) estCard.style.display = "";
+
+  // 2) Everything else happens here (if it errors, don't call it “verification failed”)
+  try {
+    refreshEstimate();
+
+    const payload = window.__PENDING_QUOTE_PAYLOAD__ || (() => {
+      try { return JSON.parse(localStorage.getItem("pendingQuotePayload") || "null"); } catch(e){ return null; }
+    })();
+
+    if (payload) {
+      renderThreeOptions(payload);
+
+      // Send to FormSubmit after verification (optional)
+      submitLeadToFormSubmit(payload);
+
+      // scroll into view
+      document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
     }
-  });
-})();/* ===== Vehicle value auto-fill (Option B) =====
+  } catch (err) {
+    console.warn("Post-verify error (verification already succeeded):", err);
+    // Optional: show a softer warning instead of doing nothing:
+    // setStatus("✅ Verified. (Note: there was a display/email step error — check console.)", "warn");
+  } finally {
+    verifyBtn.disabled = false;
+  }
+});
+
+})();
+/* ===== Vehicle value auto-fill (Option B) =====
    Assumes 10,000 miles/year (no mileage question).
    If the user manually edits the value, we stop overwriting it.
 */
