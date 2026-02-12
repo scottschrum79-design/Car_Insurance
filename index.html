@@ -227,6 +227,16 @@
   .pill.good{ border-color: rgba(90,230,177,.5); background: rgba(90,230,177,.10); color: var(--good); }
   .pill.bad{ border-color: rgba(255,122,144,.5); background: rgba(255,122,144,.10); color: var(--bad); }
 
+/* Force phone/email links to look like normal text */
+.no-tel,
+.no-tel:link,
+.no-tel:visited,
+.no-tel:hover,
+.no-tel:active {
+  color: var(--text) !important;
+  text-decoration: none !important;
+}
+
 @keyframes highlightFlash {
   0% {
     box-shadow: 0 0 0 rgba(122, 162, 255, 0);
@@ -584,9 +594,10 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
 	
 	<div class="center-box helper">prices as low as online and service as close as main street</div>
 	<div class="center-box">1522 W Main St | Ephrata, PA 17522</div>
-	<div class="center-box"> Phone: 717.431.3800</div>
-	<div class="center-box"> Text: 717.973.7657</div>
-	<div class="center-box"> www.717auto.com </div>
+	<div class="center-box"><a href="tel:17174313800" class="no-tel">Phone: 717.431.3800</a></div>
+	<div class="center-box"><a href="sms:17179737657" class="no-tel">Text: 717.973.7657</a></div>
+	<div class="center-box"><a href="https://www.717auto.com" class="no-tel" target="_blank" rel="noopener">www.717auto.com</a>
+</div>
  <div class="resultBox">
         <p class="sub">Your Selection (option 1)</p>
         <div class="big" id="estMain1">$—</div>
