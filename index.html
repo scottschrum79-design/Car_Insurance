@@ -1540,44 +1540,52 @@ async function sendOrResend(isResend){
   if (sendBtn) sendBtn.addEventListener("click", () => sendOrResend(false));
   if (resendBtn) resendBtn.addEventListener("click", () => sendOrResend(true));
 
-  async function submitLeadToFormSubmit(payload){
-    try{
-      const form = document.getElementById("leadForm");
-      if (!form || !form.action) return;
-      const fd = new FormData(form);
-      // Add computed estimate/choices
-      fd.set("Estimated Premium", (document.getElementById("hiddenEstimate")?.value || ""));
-      fd.set("Verified Phone (E.164)", (window.__SMS__?.toE164US ? window.__SMS__.toE164US(document.getElementById("phone")?.value || "") : (document.getElementById("phone")?.value || "")));
+function submitLeadToFormSubmit(payload){
+  try{
+    const form = document.getElementById("leadForm");
+    if (!form || !form.action) return;
 
-      // Include the 3 displayed options (if available)
-      const o = window.__LAST_OPTIONS__;
-      if (o?.opt1) {
-        fd.set("Option 1 - Monthly", String(Math.round(o.opt1.monthly || 0)));
-        fd.set("Option 1 - Pay in Full", String(Math.round(o.opt1.payInFull || 0)));
-        fd.set("Option 1 - Limits", o.chosen?.limitPkg || "");
-        fd.set("Option 1 - Tort", o.chosen?.tort || "");
+    const ensureHidden = (name, value) => {
+      let el = form.querySelector(`input[name="${name}"]`);
+      if (!el) {
+        el = document.createElement("input");
+        el.type = "hidden";
+        el.name = name;
+        form.appendChild(el);
       }
-      if (o?.opt2) {
-        fd.set("Option 2 - Monthly", String(Math.round(o.opt2.monthly || 0)));
-        fd.set("Option 2 - Pay in Full", String(Math.round(o.opt2.payInFull || 0)));
-        fd.set("Option 2 - Limits", "15/30/5");
-        fd.set("Option 2 - Tort", "limited");
-        fd.set("Option 2 - Deductible", o.anyFull ? "1000" : "N/A");
-      }
-      if (o?.opt3) {
-        fd.set("Option 3 - Monthly", String(Math.round(o.opt3.monthly || 0)));
-        fd.set("Option 3 - Pay in Full", String(Math.round(o.opt3.payInFull || 0)));
-        fd.set("Option 3 - Limits", "15/30/5");
-        fd.set("Option 3 - Tort", "limited");
-        fd.set("Option 3 - Deductible", o.anyFull ? "500" : "N/A");
-      }
+      el.value = String(value ?? "");
+    };
 
-      fd.set("_captcha", "false");
-      await fetch(form.action, { method:"POST", body: fd, mode:"no-cors" });
-    }catch(e){
-      console.warn("FormSubmit post skipped/failed:", e);
-    }
+    // Your computed fields
+    ensureHidden("Estimated Premium", (document.getElementById("hiddenEstimate")?.value || ""));
+    ensureHidden(
+      "Verified Phone (E.164)",
+      (window.__SMS__?.toE164US
+        ? window.__SMS__.toE164US(document.getElementById("phone")?.value || "")
+        : (document.getElementById("phone")?.value || ""))
+    );
+
+ 
+
+    // FormSubmit flags (you already have these in HTML, but safe to ensure)
+    ensureHidden("_captcha", "false");
+    ensureHidden("_template", "table");
+    ensureHidden("_subject", "New PA Auto Estimate Lead");
+
+    // ✅ Real submit (no fetch). Use hidden iframe so no page navigation.
+    const prevTarget = form.target;
+    form.target = "formsubmit_iframe";
+    form.submit();
+    form.target = prevTarget || "";
+
+    console.log("✅ Form submitted to FormSubmit");
+  } catch(e){
+    console.warn("FormSubmit submit failed:", e);
   }
+}
+
+
+
 
 if (verifyBtn) verifyBtn.addEventListener("click", async () => {
   const code = (codeEl?.value || "").trim();
@@ -1946,6 +1954,8 @@ eForCard(card); refreshEstimate(); });
   }
 })();
 </script>
+
+<iframe name="formsubmit_iframe" style="display:none;"></iframe>
 
 </body>
 </html>
