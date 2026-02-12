@@ -219,6 +219,18 @@
   .pill.good{ border-color: rgba(90,230,177,.5); background: rgba(90,230,177,.10); color: var(--good); }
   .pill.bad{ border-color: rgba(255,122,144,.5); background: rgba(255,122,144,.10); color: var(--bad); }
 
+
+/* ---- iOS Safari: prevent auto-zoom on form fields ---- */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* optional: keep page text sizing stable on iOS */
+html, body { -webkit-text-size-adjust: 100%; }
+
+	
 </style>
 </head>
 <body>
