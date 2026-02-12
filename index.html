@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PA Auto Insurance Estimate (Lead Form)</title>
+<title>717auto.com | Ephrata Insurance (Lead Form)</title>
 <style>
   :root {
     --bg:#0b1220; --card:#111a2e; --muted:#9fb0d0; --text:#eef3ff; --accent:#7aa2ff; --good:#5ae6b1; --bad:#ff7a90;
@@ -68,6 +68,14 @@
   .checkRow { display:flex; align-items:center; gap:10px; margin-top:10px; }
   .checkRow input[type="checkbox"]{ width:auto; padding:0; margin:0; }
   .checkRow .checkLabel{ font-size:13px; color:var(--muted); }
+
+.center-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 5px;
+}
 
 
 
@@ -219,6 +227,27 @@
   .pill.good{ border-color: rgba(90,230,177,.5); background: rgba(90,230,177,.10); color: var(--good); }
   .pill.bad{ border-color: rgba(255,122,144,.5); background: rgba(255,122,144,.10); color: var(--bad); }
 
+@keyframes highlightFlash {
+  0% {
+    box-shadow: 0 0 0 rgba(122, 162, 255, 0);
+  }
+  20% {
+    box-shadow: 0 0 18px rgba(122, 162, 255, 0.8);
+  }
+  75% {
+    box-shadow: 0 0 18px rgba(122, 162, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(122, 162, 255, 0);
+  }
+}
+
+
+.highlight-flash {
+  animation: highlightFlash 3s ease-in-out 2;
+   will-change: box-shadow;
+}
+
 
 /* ---- iOS Safari: prevent auto-zoom on form fields ---- */
 @supports (-webkit-touch-callout: none) {
@@ -235,14 +264,14 @@ html, body { -webkit-text-size-adjust: 100%; }
 </head>
 <body>
 <div class="wrap">
-  <h1>PA Auto Insurance Estimate</h1>
-  <p>Collects basic lead details and shows an on‑screen estimate. Designed for Pennsylvania only. (This is an <span class="warn">estimate</span>, not a bindable quote.)</p>
+  <h1>717auto.com | Ephrata Insurance</h1>
+  <p>Prices as low as online and service as close as main street.</p>
 
   <div class="grid">
     <div class="card">
-      <div class="pill">Pennsylvania</div>
-      <div class="pill">On‑screen estimate</div>
-      <div class="pill">Email lead</div>
+      <div class="pill">Please make sure to enter accurate information. Failure to do so will cause your 
+pricing to not be returned with an  unverifiable driving / insurance history. </div>
+      
 
       <!--
         EMAIL SETUP (no server required):
@@ -359,7 +388,7 @@ html, body { -webkit-text-size-adjust: 100%; }
           <button type="button" class="miniBtn" id="addDriverBtn">+ Add another driver</button>
         </div>
 
-        <!-- Vehicles -->
+  <!-- Vehicles -->
         <div class="sectionTitle">Vehicles</div>
         <div class="repeatWrap" id="vehiclesWrap">
           <div class="repeatCard vehicleCard" data-index="1">
@@ -374,10 +403,7 @@ html, body { -webkit-text-size-adjust: 100%; }
                 <input id="vin_1" name="Vehicle 1 VIN" maxlength="17" autocapitalize="characters" placeholder="17-character VIN"/>
                 <div class="helper vinStatus" id="vinStatus_1"> </div>
 </div>	   
-    	<div>
-                <label for="carValue_1">Estimated car value (USD)</label>
-                <input id="carValue_1" name="Vehicle 1 value" inputmode="numeric" placeholder="e.g., 18000" required/>
-              </div>
+    	
 	 
 	     
               <div>
@@ -388,6 +414,10 @@ html, body { -webkit-text-size-adjust: 100%; }
 <div>
                 <label for="vehMakeModel_1">Vehicle make/model</label>
                 <input id="vehMakeModel_1" name="Vehicle 1 make/model" placeholder="e.g., Honda Civic" required/>
+              </div>
+<div>
+                <label for="carValue_1">Estimated car value (USD)</label>
+                <input id="carValue_1" name="Vehicle 1 value" inputmode="numeric" placeholder="e.g., 18000" required/>
               </div>
             </div>
 
@@ -485,8 +515,8 @@ html, body { -webkit-text-size-adjust: 100%; }
         </div>
         
         <div class="adjWrap">
-          <div class="adjTitle">Optional add‑ons & discounts</div>
-          <div class="helper">These are optional. You can change labels and price impacts in the JS section: <b>PRICING_ADJUSTMENTS</b>.</div>
+          <div class="adjTitle">Optional Coverages & Discounts</div>
+
           <div id="policyAdjustments"></div>
         </div>
 
@@ -539,7 +569,8 @@ html, body { -webkit-text-size-adjust: 100%; }
     </div>
 
     <div class="card" id="lockedEstimateCard" style="display:none;">
-      <h2 style="margin:0 0 8px; font-size:18px;">Estimated premium</h2>
+      <h2 style="margin:0 0 8px; font-size:18px;">Estimated Premium</h2>
+	
       <div class="resultBox">
         <p class="sub">Verify your phone by text to view your estimate and quote options.</p>
         <div class="big" style="opacity:.6;">Locked</div>
@@ -549,7 +580,13 @@ html, body { -webkit-text-size-adjust: 100%; }
 
  <div class="card" id="estimateCard" style="display:none;">
 
-      <h2 style="margin:0 0 8px; font-size:18px;">Estimated premium</h2>
+      <h2 style="margin:0 0 8px; font-size:18px; text-align:center;">717auto.com | Ephrata Insurance</h2>
+	
+	<div class="center-box helper">prices as low as online and service as close as main street</div>
+	<div class="center-box">1522 W Main St | Ephrata, PA 17522</div>
+	<div class="center-box"> Phone: 717.431.3800</div>
+	<div class="center-box"> Text: 717.973.7657</div>
+	<div class="center-box"> www.717auto.com </div>
  <div class="resultBox">
         <p class="sub">Your Selection (option 1)</p>
         <div class="big" id="estMain1">$—</div>
@@ -591,8 +628,8 @@ html, body { -webkit-text-size-adjust: 100%; }
  
 <div class="divider"></div>
         <p class="small">
-          <span class="warn">Important:</span> This tool is meant to feel “realistic,” but it’s still a simplified estimator.
-          Final premium depends on drivers, vehicles, garaging address, driving record, credit/insurance score, discounts, etc.
+          <span class="warn">Important:</span> You will receive a final price via text and/or email once your information is verified. 
+		If you have any questions you may contact us at 717-431-3800 or info@EphrataInsurance.com
         </p>
  </div>
 
@@ -1331,18 +1368,21 @@ function refreshEstimate() {
             <div class="helper vinStatus" id="vinStatus_${vehicleIndex}"> </div>
           </div>
           <div>
-             <label for="carValue_${vehicleIndex}">Estimated car value (USD)</label>
-            <input id="carValue_${vehicleIndex}" name="Vehicle ${vehicleIndex} value" inputmode="numeric" placeholder="e.g., 18000" required/>
+	    <label for="vehYear_${vehicleIndex}">Vehicle year</label>
+            <input id="vehYear_${vehicleIndex}" name="Vehicle ${vehicleIndex} year" inputmode="numeric" placeholder="e.g., 2020" required/>             
+
+		
           </div>
         </div>
         <div class="row">
           <div>
-            <label for="vehYear_${vehicleIndex}">Vehicle year</label>
-            <input id="vehYear_${vehicleIndex}" name="Vehicle ${vehicleIndex} year" inputmode="numeric" placeholder="e.g., 2020" required/>
-          </div>
-          <div>
             <label for="vehMakeModel_${vehicleIndex}">Vehicle make/model</label>
             <input id="vehMakeModel_${vehicleIndex}" name="Vehicle ${vehicleIndex} make/model" placeholder="e.g., Honda Civic" required/>
+          </div>
+          <div>
+            <label for="carValue_${vehicleIndex}">Estimated car value (USD)</label>
+            <input id="carValue_${vehicleIndex}" name="Vehicle ${vehicleIndex} value" inputmode="numeric" placeholder="e.g., 18000" required/>
+	
           </div>
         </div>
 
@@ -1644,7 +1684,14 @@ submitLeadToFormSubmit(payload || {});
 
 
 
-document.getElementById("verifiedResults")?.scrollIntoView({behavior:"smooth", block:"start"});
+estCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+estCard?.classList.add("highlight-flash");
+
+// Optional: clean up so it can trigger again later
+setTimeout(() => {
+  estCard?.classList.remove("highlight-flash");
+}, 1300);
+
 
 
   } catch (err) {
