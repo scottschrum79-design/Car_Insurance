@@ -11,9 +11,10 @@
   // Google Analytics
   gtag('config', 'G-3K835K066L');
 
-  // Google Ads
-  gtag('config', 'AW-7540199298');
+  // Google Ads (use the AW ID that matches your conversion snippet)
+  gtag('config', 'AW-17952439960');
 </script>
+
 
 
 <meta charset="utf-8"/>
@@ -816,31 +817,46 @@ async function resendSmsCode(){
   return await sendSmsCode(phone, payload);
 }
 
+function fireSmsVerifiedConversionOnce() {
+  if (!window.gtag) return;
 
-  async function verifySmsCode(code){
-    // === DEV BYPASS (for testing only) ===
-    // Enter DEV_BYPASS_CODE to bypass SMS verification WITHOUT sending/confirming an SMS.
-    // Turn on/off by:
-    //  - Opening locally (file://) or on localhost, OR
-    //  - Setting: localStorage.setItem("DEV_SMS_BYPASS","1")  (disable with "0" or removeItem)
-    const DEV_BYPASS_CODE = "999999";
-    const DEV_MODE =
-      (window.location.protocol === "file:" ||
-       window.location.hostname === "localhost" ||
-       window.location.hostname === "127.0.0.1") ||
-      (localStorage.getItem("DEV_SMS_BYPASS") === "1");
+  // Prevent double-fires in the same session
+  if (sessionStorage.getItem("smsVerifiedLeadFired") === "1") return;
+  sessionStorage.setItem("smsVerifiedLeadFired", "1");
 
-    const entered = String(code||"").trim();
+  gtag("event", "conversion", {
+    send_to: "AW-17952439960/bQJTC1FdpvgDEJ95fBC"
+  });
+}
 
-    if (DEV_MODE && entered === DEV_BYPASS_CODE) {
-      // Simulate successful verification
-      return true;
-    }
 
-    if (!confirmationResult) throw new Error("No confirmation state");
-    const cred = await confirmationResult.confirm(entered);
-    return !!cred?.user;
+async function verifySmsCode(code){
+  const DEV_BYPASS_CODE = "999999";
+  const DEV_MODE =
+    (window.location.protocol === "file:" ||
+     window.location.hostname === "localhost" ||
+     window.location.hostname === "127.0.0.1") ||
+    (localStorage.getItem("DEV_SMS_BYPASS") === "1");
+
+  const entered = String(code||"").trim();
+
+  if (DEV_MODE && entered === DEV_BYPASS_CODE) {
+    // Simulate successful verification (no Ads conversion fired in dev)
+    return true;
   }
+
+  if (!confirmationResult) throw new Error("No confirmation state");
+
+  const cred = await confirmationResult.confirm(entered);
+  const ok = !!cred?.user;
+
+  if (ok) {
+    fireSmsVerifiedConversionOnce(); // ✅ FIRE HERE (real SMS verified)
+  }
+
+  return ok;
+}
+
 
   window.__SMS__ = { sendSmsCode, resendSmsCode, verifySmsCode, toE164US };
 </script>
@@ -2225,6 +2241,9 @@ function wireDobText(textId, hiddenId) {
 document.addEventListener("DOMContentLoaded", () => {
   wireDobText("dob_1_text", "dob_1");
 });
+
+
+
 
 </script>
 
