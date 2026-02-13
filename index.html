@@ -698,27 +698,43 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
     return "+" + d;
   }
 
-  let recaptchaVerifier = null;
-  let recaptchaWidgetId = null;
-  let confirmationResult = null;
+let recaptchaVerifier = null;
+let recaptchaWidgetId = null;
+let confirmationResult = null;
 
- async function ensureRecaptcha(){
+function resetRecaptcha() {
+  try {
+    if (window.grecaptcha && recaptchaWidgetId != null) {
+      window.grecaptcha.reset(recaptchaWidgetId);
+    }
+  } catch (e) {}
+}
+
+let recaptchaVerifier = null;
+let recaptchaWidgetId = null;
+
+async function ensureRecaptcha(forceRecreate = false) {
+  if (forceRecreate && recaptchaVerifier) {
+    try {
+      recaptchaVerifier.clear();
+    } catch (e) {}
+    recaptchaVerifier = null;
+    recaptchaWidgetId = null;
+  }
+
   if (!recaptchaVerifier) {
     recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
       size: "invisible",
-      callback: () => {},
+      callback: () => {
+        // solved automatically
+      },
       "expired-callback": () => {
-        // if it expires, reset it so the next attempt works
-        try {
-          if (window.grecaptcha && recaptchaWidgetId != null) {
-            window.grecaptcha.reset(recaptchaWidgetId);
-          }
-        } catch(e) {}
+        // allow retry
+        resetRecaptcha();
       }
     });
   }
 
-  // ✅ Render ONCE only
   if (recaptchaWidgetId == null) {
     recaptchaWidgetId = await recaptchaVerifier.render();
   }
@@ -727,17 +743,28 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
 }
 
 
-  async function sendSmsCode(phoneRaw, payload){
-    const phone = toE164US(phoneRaw);
-    if (!phone) throw new Error("Missing phone");
-    localStorage.setItem(LS_PHONE, phone);
-    localStorage.setItem(LS_PAYLOAD, JSON.stringify(payload));
 
+
+async function sendSmsCode(phoneRaw, payload){
+  const phone = toE164US(phoneRaw);
+  if (!phone) throw new Error("Missing phone");
+  localStorage.setItem(LS_PHONE, phone);
+  localStorage.setItem(LS_PAYLOAD, JSON.stringify(payload));
+
+  try {
     const verifier = await ensureRecaptcha();
     confirmationResult = await signInWithPhoneNumber(auth, phone, verifier);
     window.__SMS__.confirmationResult = confirmationResult;
     return phone;
+  } catch (err) {
+    // If user clicked away / captcha expired / got stuck, recreate for next attempt
+    console.warn("sendSmsCode failed; resetting/recreating reCAPTCHA:", err);
+    try { resetRecaptcha(); } catch(e) {}
+    try { await ensureRecaptcha(true); } catch(e) {}
+    throw err;
   }
+}
+
 
 async function resendSmsCode(){
   const payloadRaw = localStorage.getItem(LS_PAYLOAD);
