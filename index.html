@@ -402,8 +402,12 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
   type="text"
   placeholder="MM/DD/YYYY"
   inputmode="numeric"
-  autocorrect="off"
+  pattern="\d{2}/\d{2}/\d{4}"
   autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+  enterkeyhint="done"
   maxlength="10"
   required
 />
@@ -1331,8 +1335,12 @@ function refreshEstimate() {
   		type="text"
   		placeholder="MM/DD/YYYY"
   		inputmode="numeric"
+  		pattern="\d{2}/\d{2}/\d{4}"
+  		autocomplete="off"
   		autocorrect="off"
-                autocomplete="off"
+  		autocapitalize="off"
+  		spellcheck="false"
+  		enterkeyhint="done"
   		maxlength="10"
   		required
 	/>
