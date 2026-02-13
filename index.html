@@ -2082,6 +2082,15 @@ eForCard(card); refreshEstimate(); });
     document.getElementById("devModeBanner").style.display = "inline-block";
   }
 })();
+
+(function constrainDob(){
+  document.querySelectorAll('input[type="date"][id^="dob_"]').forEach(dob => {
+    const today = new Date();
+    dob.min = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate()).toISOString().slice(0,10);
+    dob.max = new Date(today.getFullYear() - 16,  today.getMonth(), today.getDate()).toISOString().slice(0,10);
+  });
+})();
+
 </script>
 
 <iframe name="formsubmit_iframe" style="display:none;"></iframe>
