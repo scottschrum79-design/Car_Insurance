@@ -1310,13 +1310,25 @@ function refreshEstimate() {
 
   <div class="row">
     <div>
-      <label for="dob_${driverIndex}">Birthdate</label>
-      <input data-field="dob" data-name="birthdate"
-        id="dob_${driverIndex}"
-        name="Driver ${driverIndex} birthdate"
-        type="date"
-        required 
-	class="dob"/>
+   <label for="dob_${driverIndex}_text">Birthdate</label>
+	<input
+  		class="dobText"
+  		id="dob_${driverIndex}_text"
+  		name="Driver ${driverIndex} birthdate"
+  		type="text"
+  		placeholder="MM/DD/YYYY"
+  		inputmode="numeric"
+  		autocomplete="bday"
+  		maxlength="10"
+  		required
+	/>
+	<input
+  		class="dobISO"
+  		id="dob_${driverIndex}"
+  		name="Driver ${driverIndex} birthdate (ISO)"
+  		type="hidden"
+  		required
+	/>
     </div>
     <div>
       <label for="dlNumber_${driverIndex}">Driver license # (optional)</label>
@@ -1329,6 +1341,8 @@ function refreshEstimate() {
 `;
 
       driversWrap.appendChild(card);
+      wireDobText(`dob_${driverIndex}_text`, `dob_${driverIndex}`);
+
       card.querySelector(".removeDriverBtn").addEventListener("click", () => {
         card.remove();
         // re-number for clean names
