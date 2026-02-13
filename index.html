@@ -1605,30 +1605,31 @@ let __cooldownTimer = null;
 
 window.startResendCooldown = function(seconds){
   let remaining = Math.max(0, parseInt(seconds, 10) || 0);
-  if (!resendBtn) return;
 
-  // make sure the resend button is actually visible
-  resendBtn.style.display = "block";
-
-  // disable while counting down
-  resendBtn.disabled = true;
+  // We no longer use Resend — cooldown applies to Send
   if (sendBtn) sendBtn.disabled = true;
 
-  if (cooldownText) cooldownText.textContent = remaining ? `You can resend in ${remaining}s` : "";
+  if (cooldownText) {
+    cooldownText.textContent = remaining
+      ? `You can send another code in ${remaining}s`
+      : "";
+  }
 
-  // ✅ clear any prior timer so multiple sends don't conflict
   if (__cooldownTimer) clearInterval(__cooldownTimer);
 
   __cooldownTimer = setInterval(() => {
     remaining -= 1;
-    if (cooldownText) cooldownText.textContent = remaining > 0 ? `You can resend in ${remaining}s` : "";
+
+    if (cooldownText) {
+      cooldownText.textContent =
+        remaining > 0 ? `You can send another code in ${remaining}s` : "";
+    }
 
     if (remaining <= 0) {
       clearInterval(__cooldownTimer);
       __cooldownTimer = null;
 
-      resendBtn.disabled = false;
-      if (sendBtn) sendBtn.disabled = false; // optional: allow Send to be clicked again too
+      if (sendBtn) sendBtn.disabled = false;
       if (cooldownText) cooldownText.textContent = "";
     }
   }, 1000);
