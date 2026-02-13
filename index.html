@@ -384,8 +384,18 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
 
   <div class="row">
 <div>
-<label for="dob_1">Birthdate</label>
-                <input id="dob_1" name="Driver 1 birthdate" type="date" required class="dob"/>
+<label for="dob_1_text">Birthdate</label>
+<input
+  id="dob_1_text"
+  type="text"
+  placeholder="MM/DD/YYYY"
+  inputmode="numeric"
+  autocomplete="bday"
+  maxlength="10"
+  required
+/>
+<input id="dob_1" name="Driver 1 birthdate" type="hidden" required />
+
               </div>
               <div>
                 <label for="dlNumber_1">Driver license # (optional)</label>
@@ -2117,6 +2127,50 @@ document.addEventListener("focusin", (e) => {
   if (e.target.matches('input[type="date"].dob')) {
     applyDobLimitsAll();
   }
+});
+
+function mmddyyyyToISO(v) {
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(v)) return "";
+  const [mm, dd, yyyy] = v.split("/").map(Number);
+  const d = new Date(yyyy, mm - 1, dd);
+  const ok =
+    d.getFullYear() === yyyy &&
+    d.getMonth() === (mm - 1) &&
+    d.getDate() === dd;
+
+  if (!ok) return "";
+
+  // enforce 16–100
+  const today = new Date();
+  const min = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
+  const max = new Date(today.getFullYear() - 16,  today.getMonth(), today.getDate());
+  if (d < min || d > max) return "";
+
+  return `${String(yyyy).padStart(4,"0")}-${String(mm).padStart(2,"0")}-${String(dd).padStart(2,"0")}`;
+}
+
+function wireDobText(textId, hiddenId) {
+  const t = document.getElementById(textId);
+  const h = document.getElementById(hiddenId);
+  if (!t || !h) return;
+
+  t.addEventListener("input", () => {
+    let digits = t.value.replace(/\D/g, "").slice(0, 8);
+    if (digits.length >= 5) t.value = digits.slice(0,2) + "/" + digits.slice(2,4) + "/" + digits.slice(4);
+    else if (digits.length >= 3) t.value = digits.slice(0,2) + "/" + digits.slice(2);
+    else t.value = digits;
+
+    h.value = mmddyyyyToISO(t.value);
+  });
+
+  t.addEventListener("blur", () => {
+    if (!h.value) t.setCustomValidity("Enter a valid birthdate (MM/DD/YYYY), age 16–100.");
+    else t.setCustomValidity("");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  wireDobText("dob_1_text", "dob_1");
 });
 
 </script>
