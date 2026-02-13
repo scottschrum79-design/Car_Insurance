@@ -385,7 +385,7 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
   <div class="row">
 <div>
 <label for="dob_1">Birthdate</label>
-                <input id="dob_1" name="Driver 1 birthdate" type="date" required/>
+                <input id="dob_1" name="Driver 1 birthdate" type="date" required class="dob"/>
               </div>
               <div>
                 <label for="dlNumber_1">Driver license # (optional)</label>
@@ -1305,7 +1305,8 @@ function refreshEstimate() {
         id="dob_${driverIndex}"
         name="Driver ${driverIndex} birthdate"
         type="date"
-        required />
+        required 
+	class="dob"/>
     </div>
     <div>
       <label for="dlNumber_${driverIndex}">Driver license # (optional)</label>
@@ -2074,6 +2075,8 @@ eForCard(card); refreshEstimate(); });
 <div id="devModeBanner">DEV SMS BYPASS ACTIVE</div>
 
 <script>
+
+
 (function(){
   const isLocal = window.location.protocol === "file:"
                || window.location.hostname.includes("localhost");
@@ -2083,17 +2086,38 @@ eForCard(card); refreshEstimate(); });
   }
 })();
 
-(function constrainDob(){
-  document.querySelectorAll('input[type="date"][id^="dob_"]').forEach(dob => {
-    const today = new Date();
-    dob.min = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate()).toISOString().slice(0,10);
-    dob.max = new Date(today.getFullYear() - 16,  today.getMonth(), today.getDate()).toISOString().slice(0,10);
+function applyDobLimitsAll() {
+  const today = new Date();
+
+  const min = new Date(
+    today.getFullYear() - 100,
+    today.getMonth(),
+    today.getDate()
+  ).toISOString().slice(0, 10);
+
+  const max = new Date(
+    today.getFullYear() - 16,
+    today.getMonth(),
+    today.getDate()
+  ).toISOString().slice(0, 10);
+
+  document.querySelectorAll('input[type="date"].dob').forEach(dob => {
+    dob.min = min;
+    dob.max = max;
   });
-})();
+}
 
-document.getElementById("dob_1")?.min
-document.getElementById("dob_1")?.max
+// Run on initial load
+document.addEventListener("DOMContentLoaded", () => {
+  applyDobLimitsAll();
+});
 
+// Re-apply whenever a DOB field is focused (iOS-safe)
+document.addEventListener("focusin", (e) => {
+  if (e.target.matches('input[type="date"].dob')) {
+    applyDobLimitsAll();
+  }
+});
 
 </script>
 
