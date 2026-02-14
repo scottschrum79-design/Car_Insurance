@@ -700,7 +700,7 @@ pricing to not be returned with an  unverifiable driving / insurance history. </
   </div>
 </div>
 
-<!-- Firebase email-link verification (Magic Link) -->
+
 <script type="module">
   // Firebase SMS (Phone) verification
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
@@ -862,6 +862,7 @@ async function verifySmsCode(code){
   const ok = !!cred?.user;
 
   if (ok) {
+    console.log("gtag exists:", typeof gtag);
     fireSmsVerifiedConversionOnce(); // ✅ FIRE HERE (real SMS verified)
   }
 
