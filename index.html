@@ -818,16 +818,27 @@ async function resendSmsCode(){
 }
 
 function fireSmsVerifiedConversionOnce() {
-  if (!window.gtag) return;
+  console.log("🔥 SMS VERIFIED — firing Google Ads conversion");
 
-  // Prevent double-fires in the same session
-  if (sessionStorage.getItem("smsVerifiedLeadFired") === "1") return;
+  if (!window.gtag) {
+    console.warn("❌ gtag not found");
+    return;
+  }
+
+  if (sessionStorage.getItem("smsVerifiedLeadFired") === "1") {
+    console.warn("⚠️ Conversion already fired this session");
+    return;
+  }
+
   sessionStorage.setItem("smsVerifiedLeadFired", "1");
 
   gtag("event", "conversion", {
     send_to: "AW-17952439960/bQJTC1FdpvgDEJ95fBC"
   });
+
+  console.log("✅ gtag conversion event sent");
 }
+
 
 
 async function verifySmsCode(code){
