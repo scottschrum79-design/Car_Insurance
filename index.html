@@ -236,9 +236,9 @@
   .checkMain{ font-weight:750; color:var(--text); line-height:1.15; }
   .checkSub{ font-size:12px; color:var(--muted); margin-top:2px; }
   .pill{
-    display:inline-block; font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px;
+    display:block; font-size:18px; font-weight:400; padding:3px 8px; border-radius:999px;
     border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06); color:var(--text);
-    margin-left:6px;
+    margin:0 auto; width: fit-content;
   }
   .pill.good{ border-color: rgba(90,230,177,.5); background: rgba(90,230,177,.10); color: var(--good); }
   .pill.bad{ border-color: rgba(255,122,144,.5); background: rgba(255,122,144,.10); color: var(--bad); }
@@ -297,407 +297,462 @@
 /* optional: keep page text sizing stable on iOS */
 html, body { -webkit-text-size-adjust: 100%; }
 
+
+   
+    /* --- Top Pill Links (LEFT aligned) --- */
+    .top-pills {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start; /* 👈 LEFT aligned */
+        align-items: center;
+        max-width: 980px; /* 👈 match .wrap width */
+        margin: 0 auto; /* 👈 center the container, not the pills */
+        padding: 10px 16px;
+        background: rgba(11,18,32,.88);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+    }
+
+
+    /* Make room so your content isn't covered */
+    .wrap {
+        padding-top: 16px; /* you already have 28px; this is just extra safety */
+    }
+
+    .top-pills a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        text-decoration: none;
+        background: rgba(255,255,255,.06);
+        border: 1px solid rgba(255,255,255,.15);
+        white-space: nowrap;
+        transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+
+        .top-pills a:hover {
+            background: rgba(255,255,255,.12);
+            border-color: rgba(122,162,255,.45);
+            transform: translateY(-1px);
+        }
+
+    /* Mobile: let them wrap nicely instead of squishing */
+    @media (max-width: 420px) {
+        .top-pills {
+            flex-wrap: wrap;
+        }
+    }
+
 	
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>717auto.com | Ephrata Insurance</h1>
-  <p>Prices as low as online and service as close as main street.</p>
-
-  <div class="grid">
-    <div class="card">
-      <div class="pill">Please make sure to enter accurate information. Failure to do so will cause your 
-pricing to not be returned with an  unverifiable driving / insurance history. </div>
-      
-
-      <!--
-        EMAIL SETUP (no server required):
-        1) Replace YOUREMAIL@DOMAIN.COM below with the inbox you want to receive leads at.
-        2) FormSubmit will email you the submission. (You may need to confirm the address on first use.)
-        Docs: https://formsubmit.co/
-      -->
-      <form id="leadForm" action="https://formsubmit.co/scott@scottplan.com" method="POST">
-        <input type="hidden" name="_subject" value="New PA Auto Estimate Lead"/>
-        <input type="hidden" name="_captcha" value="false"/>
-        <input type="hidden" id="hiddenEstimate" name="Estimated Premium"/>
-        <input type="hidden" name="_template" value="table"/>
-
-        <div class="row">
-          <div>
-            <label for="firstName">First name</label>
-            <input id="firstName" name="First name" required />
-          </div>
-          <div>
-            <label for="lastName">Last name</label>
-            <input id="lastName" name="Last name" required />
-          </div>
-          <div>
-            <label for="phone">Phone</label>
-            <input id="phone" name="Phone" autocomplete="tel" inputmode="tel" placeholder="(717) 555‑1212" required/>
-          </div>
-<div>
-            <label for="email">Email</label>
-            <input id="email" name="Email" type="email" autocomplete="email" required/>
-            
-          </div>
-       
-
-<div class="row">
-  <div>
-    <label for="street">Street address</label>
-    <input
-      id="street"
-      name="Street address"
-      placeholder="123 Main St"
-      autocomplete="street-address"
-      required
-    />
-  </div>
-  <div>
-    <label for="city">City</label>
-    <input
-      id="city"
-      name="City"
-      autocomplete="address-level2"
-      required
-    />
-  </div>
-</div>
-
-<div class="row">
-  <div>
-    <label for="state">State</label>
-    <select id="state" name="State" required>
-      <option value="PA" selected>Pennsylvania</option>
-    </select>
-  </div>
-  <div>
-    <label for="zip">ZIP code</label>
-    <input
-      id="zip"
-      name="Zip"
-      inputmode="numeric"
-      pattern="\d{5}"
-      placeholder="5 digits"
-      autocomplete="postal-code"
-      required
-    />
-  </div>
-</div>
-
+    <div class="wrap">
+        <h1>717auto.com | Ephrata Insurance</h1>
+        <p>Prices as low as online and service as close as main street.</p>
+     <!-- Top Pill Links -->
+        <div class="top-pills">
+            <a href="https://go.717auto.com/" target="_blank" rel="noopener">Services</a>
+            <a href="https://go.717auto.com/location" target="_blank" rel="noopener">Location</a>
+            <a href="https://go.717auto.com/faqs" target="_blank" rel="noopener">FAQs</a>
+            <a href="https://go.717auto.com/appointments" target="_blank" rel="noopener">Appointments</a>
         </div>
 
-        
-        <!-- Drivers -->
-        <div class="sectionTitle">Drivers</div>
-        <div class="repeatWrap" id="driversWrap">
-          <div class="repeatCard driverCard" data-index="1">
-            <div class="repeatHead">
-              <div class="title">Driver 1</div>
-              <button type="button" class="miniBtn danger removeDriverBtn" style="display:none;">Remove</button>
+        <div class="grid">
+            <div class="card">
+                <div class="pill">
+                    Get Your Customized Auto Insurance Price is 30 seconds or less.
+                </div>
+
+
+                <!--
+              EMAIL SETUP (no server required):
+              1) Replace YOUREMAIL@DOMAIN.COM below with the inbox you want to receive leads at.
+              2) FormSubmit will email you the submission. (You may need to confirm the address on first use.)
+              Docs: https://formsubmit.co/
+            -->
+                <form id="leadForm" action="https://formsubmit.co/scott@scottplan.com" method="POST">
+                    <input type="hidden" name="_subject" value="New PA Auto Estimate Lead" />
+                    <input type="hidden" name="_captcha" value="false" />
+                    <input type="hidden" id="hiddenEstimate" name="Estimated Premium" />
+                    <input type="hidden" name="_template" value="table" />
+
+                    <div class="row">
+                        <div>
+                            <label for="firstName">First name</label>
+                            <input id="firstName" name="First name" required />
+                        </div>
+                        <div>
+                            <label for="lastName">Last name</label>
+                            <input id="lastName" name="Last name" required />
+                        </div>
+                        <div>
+                            <label for="phone">Phone</label>
+                            <input id="phone" name="Phone" autocomplete="tel" inputmode="tel" placeholder="(717) 555‑1212" required />
+                        </div>
+                        <div>
+                            <label for="email">Email</label>
+                            <input id="email" name="Email" type="email" autocomplete="email" required />
+
+                        </div>
+
+
+                        <div class="row">
+                            <div>
+                                <label for="street">Street address</label>
+                                <input id="street"
+                                       name="Street address"
+                                       placeholder="123 Main St"
+                                       autocomplete="street-address"
+                                       required />
+                            </div>
+                            <div>
+                                <label for="city">City</label>
+                                <input id="city"
+                                       name="City"
+                                       autocomplete="address-level2"
+                                       required />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div>
+                                <label for="state">State</label>
+                                <select id="state" name="State" required>
+                                    <option value="PA" selected>Pennsylvania</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="zip">ZIP code</label>
+                                <input id="zip"
+                                       name="Zip"
+                                       inputmode="numeric"
+                                       pattern="\d{5}"
+                                       placeholder="5 digits"
+                                       autocomplete="postal-code"
+                                       required />
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Drivers -->
+                    <div class="sectionTitle">Drivers</div>
+                    <div class="repeatWrap" id="driversWrap">
+                        <div class="repeatCard driverCard" data-index="1">
+                            <div class="repeatHead">
+                                <div class="title">Driver 1</div>
+                                <button type="button" class="miniBtn danger removeDriverBtn" style="display:none;">Remove</button>
+                            </div>
+                            <div class="row">
+
+                                <div>
+                                    <label for="dFirst_1">Driver first name</label>
+                                    <input id="dFirst_1" name="Driver 1 first name" />
+                                </div>
+                                <div>
+                                    <label for="dLast_1">Driver last name</label>
+                                    <input id="dLast_1" name="Driver 1 last name" />
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div>
+                                    <label for="dob_1_text">Birthdate</label>
+                                    <input id="dob_1_text"
+                                           name="dob_display_1"
+                                           type="text"
+                                           placeholder="MM/DD/YYYY"
+                                           inputmode="numeric"
+                                           pattern="\d{2}/\d{2}/\d{4}"
+                                           autocomplete="off"
+                                           autocorrect="off"
+                                           autocapitalize="off"
+                                           spellcheck="false"
+                                           enterkeyhint="done"
+                                           maxlength="10"
+                                           required />
+                                    <input id="dob_1" name="Driver 1 birthdate" type="hidden" required />
+
+                                </div>
+                                <div>
+                                    <label for="dlNumber_1">Driver license # (optional)</label>
+                                    <input id="dlNumber_1" name="Driver 1 license" placeholder="Optional" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actionsRow">
+                        <button type="button" class="miniBtn" id="addDriverBtn">+ Add another driver</button>
+                    </div>
+
+                    <!-- Vehicles -->
+                    <div class="sectionTitle">Vehicles</div>
+                    <div class="repeatWrap" id="vehiclesWrap">
+                        <div class="repeatCard vehicleCard" data-index="1">
+                            <div class="repeatHead">
+                                <div class="title">Vehicle 1</div>
+                                <button type="button" class="miniBtn danger removeVehicleBtn" style="display:none;">Remove</button>
+                            </div>
+
+                            <div class="row">
+                                <div>
+                                    <label for="vin_1">VIN (optional)</label>
+                                    <input id="vin_1" name="Vehicle 1 VIN" maxlength="17" autocapitalize="characters" placeholder="17-character VIN" />
+                                    <div class="helper vinStatus" id="vinStatus_1"> </div>
+                                </div>
+
+
+
+                                <div>
+                                    <label for="vehYear_1">Vehicle year</label>
+                                    <input id="vehYear_1" name="Vehicle 1 year" inputmode="numeric" placeholder="e.g., 2020" required />
+                                </div>
+
+                                <div>
+                                    <label for="vehMakeModel_1">Vehicle make/model</label>
+                                    <input id="vehMakeModel_1" name="Vehicle 1 make/model" placeholder="e.g., Honda Civic" required />
+                                </div>
+                                <div>
+                                    <label for="carValue_1">Estimated car value (USD)</label>
+                                    <input id="carValue_1" name="Vehicle 1 value" inputmode="numeric" placeholder="e.g., 18000" required />
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="row">
+
+                                <div>
+                                    <!--           <label for="annualMiles_1">Annual miles (rough)</label>   -->
+                                    <select id="annualMiles_1" name="Vehicle 1 annual miles" class="hiddenSelect">
+                                        <option value="low">&lt; 8,000</option>
+                                        <option value="avg" selected>8,000–12,000</option>
+                                        <option value="high">12,001–18,000</option>
+                                        <option value="vhigh">&gt; 18,000</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="checkRow">
+                                <input type="checkbox" id="fullCov_1" name="Vehicle 1 Full coverage" checked />
+                                <span class="checkLabel">Full coverage (Comp + Collision)</span>
+                                <span class="tipIcon" title="Recommended for vehicles less than 15 years old. Uncheck to remove Comp & Collision from the estimate.">i</span>
+                                <span class="recBadge" style="display:none;">Recommended</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="actionsRow">
+                        <button type="button" class="miniBtn" id="addVehicleBtn">+ Add another vehicle</button>
+                    </div>
+
+                    <!-- Policy -->
+                    <div class="policyBox" id="policyBox">
+                        <div class="policyTitleRow">
+                            <div class="sectionTitle" style="margin:0;">Policy options</div>
+                            <div class="policyBadge">Coverage choices</div>
+                        </div>
+
+                        <div class="row">
+                            <div>
+
+                                <label for="limitPkg">Liability limits</label>
+
+                                <select id="limitPkg" name="Liability limits" required>
+                                    <option value="15/30/5" selected>15/30/5</option>
+                                    <option value="25/50/25">25/50/25</option>
+                                    <option value="50/100/50">50/100/50</option>
+                                    <option value="100/300/100">100/300/100</option>
+                                    <option value="250/500/250">250/500/250</option>
+                                </select>
+
+                            </div>
+                            <div>
+
+                                <label for="tort">Tort option</label>
+
+                                <select id="tort" name="Tort option" required>
+                                    <option value="limited" selected>Limited Tort </option>
+                                    <option value="full">Full Tort</option>
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div>
+                                <div>
+                                    <label for="deductible">Comp/Coll Deductible</label>
+                                    <select id="deductible" name="Deductible (Comp/Coll)" required>
+                                        <option value="250">250</option>
+                                        <option value="500" selected>500</option>
+                                        <option value="1000">1000</option>
+                                        <option value="1500">1500</option>
+                                        <option value="2000">2000</option>
+                                    </select>
+                                    <div class="helper">Applies only if any vehicle is marked “Full coverage”.</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="helper termStatic">Policy term: <b>6 months</b></div>
+                                <label for="term">Policy term</label>
+                                <select id="term" name="Policy term" required class="hiddenSelect">
+                                    <option value="6" selected>6 months</option>
+                                    <option value="12">12 months</option>
+                                </select>
+                            </div>
+
+                            <!-- <div>
+                          <label>&nbsp;</label>
+                          <div class="helper">Pay-in-full price shown below (15% less than term premium).</div>
+                        </div> -->
+                        </div>
+
+                        <div class="adjWrap">
+                            <div class="adjTitle">Optional Coverages & Discounts</div>
+
+                            <div id="policyAdjustments"></div>
+                        </div>
+
+                    </div>
+
+                    <label for="notes">Anything else we should know?</label>
+                    <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, business use, garaging details, etc."></textarea>
+
+
+                    <div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
+
+                        <div class="checkRow">
+                            <input type="checkbox" id="smsConsent">
+                            <span class="checkLabel">
+                                I agree to having my information verified
+                            </span>
+                            <div class="helper_small">
+                                By checking this box, you agree to have your auto insurance information verfied by Ephrata Insurance and/or it's affiliates;
+                                which may include insurance history, driving record, and other factors. You will receive an automated SMS/text messages
+                                from 717auto.com to verify it is you. No purchased is required.
+                                Msg & data rates may apply. Reply STOP to cancel, HELP for help.
+                            </div>
+                        </div>
+
+
+                        <button type="button" class="btn" id="sendCodeBtn">Send verification code</button>
+
+                        <button type="button" class="btn" id="resendCodeBtn" style="display:none; margin-top:10px;">
+                            Resend code
+                        </button>
+
+                        <div id="cooldownText" class="helper"></div>
+
+                        <label for="smsCode">Verification code</label>
+                        <input type="text" id="smsCode" maxlength="6" placeholder="Enter 6-digit code">
+
+                        <button type="button" class="btn" id="verifyCodeBtn">
+                            Verify & show my quote
+                        </button>
+
+                        <div id="smsStatus" class="helper"></div>
+
+                        <!-- Firebase phone auth uses this (invisible) reCAPTCHA mount -->
+                        <div id="recaptcha-container"></div>
+
+                    </div>
+
+
+                </form>
             </div>
-            <div class="row">
-              
-  <div>
-    <label for="dFirst_1">Driver first name</label>
-    <input id="dFirst_1" name="Driver 1 first name" />
-  </div>
-  <div>
-    <label for="dLast_1">Driver last name</label>
-    <input id="dLast_1" name="Driver 1 last name" />
-  </div>
-</div>
 
+            <div class="card" id="lockedEstimateCard" style="display:none;">
+                <h2 style="margin:0 0 8px; font-size:18px;">Estimated Premium</h2>
 
-  <div class="row">
-<div>
-<label for="dob_1_text">Birthdate</label>
-<input
-  id="dob_1_text"
-  name="dob_display_1"
-  type="text"
-  placeholder="MM/DD/YYYY"
-  inputmode="numeric"
-  pattern="\d{2}/\d{2}/\d{4}"
-  autocomplete="off"
-  autocorrect="off"
-  autocapitalize="off"
-  spellcheck="false"
-  enterkeyhint="done"
-  maxlength="10"
-  required
-/>
-<input id="dob_1" name="Driver 1 birthdate" type="hidden" required />
-
-              </div>
-              <div>
-                <label for="dlNumber_1">Driver license # (optional)</label>
-                <input id="dlNumber_1" name="Driver 1 license" placeholder="Optional"/>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="actionsRow">
-          <button type="button" class="miniBtn" id="addDriverBtn">+ Add another driver</button>
-        </div>
-
-  <!-- Vehicles -->
-        <div class="sectionTitle">Vehicles</div>
-        <div class="repeatWrap" id="vehiclesWrap">
-          <div class="repeatCard vehicleCard" data-index="1">
-            <div class="repeatHead">
-              <div class="title">Vehicle 1</div>
-              <button type="button" class="miniBtn danger removeVehicleBtn" style="display:none;">Remove</button>
+                <div class="resultBox">
+                    <p class="sub">Verify your phone by text to view your estimate and quote options.</p>
+                    <div class="big" style="opacity:.6;">Locked</div>
+                    <p class="sub">We’ll text a one-time code. After verification, your estimate will appear here.</p>
+                </div>
             </div>
 
-            <div class="row">
-              <div>
-                <label for="vin_1">VIN (optional)</label>
-                <input id="vin_1" name="Vehicle 1 VIN" maxlength="17" autocapitalize="characters" placeholder="17-character VIN"/>
-                <div class="helper vinStatus" id="vinStatus_1"> </div>
-</div>	   
-    	
-	 
-	     
-              <div>
-                <label for="vehYear_1">Vehicle year</label>
-                <input id="vehYear_1" name="Vehicle 1 year" inputmode="numeric" placeholder="e.g., 2020" required/>
-              </div>
-             
-<div>
-                <label for="vehMakeModel_1">Vehicle make/model</label>
-                <input id="vehMakeModel_1" name="Vehicle 1 make/model" placeholder="e.g., Honda Civic" required/>
-              </div>
-<div>
-                <label for="carValue_1">Estimated car value (USD)</label>
-                <input id="carValue_1" name="Vehicle 1 value" inputmode="numeric" placeholder="e.g., 18000" required/>
-              </div>
+            <div class="card" id="estimateCard" style="display:none;">
+
+                <h2 style="margin:0 0 8px; font-size:18px; text-align:center;">717auto.com | Ephrata Insurance</h2>
+
+                <div class="center-box helper">prices as low as online and service as close as main street</div>
+                <div class="center-box">1522 W Main St | Ephrata, PA 17522</div>
+                <div class="center-box"><a href="tel:17174313800" class="no-tel">Phone: 717.431.3800</a></div>
+                <div class="center-box"><a href="sms:17179737657" class="no-tel">Text: 717.973.7657</a></div>
+                <div class="center-box">
+                    <a href="https://www.717auto.com" class="no-tel" target="_blank" rel="noopener">www.717auto.com</a>
+                </div>
+                <div class="resultBox">
+                    <p class="sub">Your Selection (option 1)</p>
+                    <div class="big" id="estMain1">$—</div>
+                    <p class="sub" id="estSub1">Enter details to see an estimate.</p>
+
+                    <div class="kpi">
+                        <div><b>Monthly (approx.)</b><span id="kpiMonthly1">$—</span></div>
+                        <div><b>Pay in full price (save 15%)</b><span id="kpiTerm1">$—</span></div>
+                        <div><b>Liability portion</b><span id="kpiLiab1">$—</span></div>
+                        <div><b>Comp/Coll portion</b><span id="kpiPhys1">$—</span></div>
+                    </div>
+                </div>
+
+                <div class="resultBox">
+                    <p class="sub">Lower Liability (option 2)</p>
+                    <div class="big" id="estMain2">$—</div>
+                    <p class="sub" id="estSub2">Enter details to see an estimate.</p>
+
+                    <div class="kpi">
+                        <div><b>Monthly (approx.)</b><span id="kpiMonthly2">$—</span></div>
+                        <div><b>Pay in full price (save 15%)</b><span id="kpiTerm2">$—</span></div>
+                        <div><b>Liability portion</b><span id="kpiLiab2">$—</span></div>
+                        <div><b>Comp/Coll portion</b><span id="kpiPhys2">$—</span></div>
+                    </div>
+                </div>
+
+                <div class="resultBox">
+                    <p class="sub">Higher Coverage (option 3)</p>
+                    <div class="big" id="estMain3">$—</div>
+                    <p class="sub" id="estSub3">Enter details to see an estimate.</p>
+
+                    <div class="kpi">
+                        <div><b>Monthly (approx.)</b><span id="kpiMonthly3">$—</span></div>
+                        <div><b>Pay in full price (save 15%)</b><span id="kpiTerm3">$—</span></div>
+                        <div><b>Liability portion</b><span id="kpiLiab3">$—</span></div>
+                        <div><b>Comp/Coll portion</b><span id="kpiPhys3">$—</span></div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <p class="small">
+                    <span class="warn">Important:</span> You will receive a final price via text and/or email once your information is verified.
+                    If you have any questions you may contact us at 717-431-3800 or info@EphrataInsurance.com
+                </p>
             </div>
 
-           
-    
-           
 
-            <div class="row">
-            
-              <div>
-    <!--           <label for="annualMiles_1">Annual miles (rough)</label>   -->
-                <select id="annualMiles_1" name="Vehicle 1 annual miles" class="hiddenSelect">
-                  <option value="low">&lt; 8,000</option>
-                  <option value="avg" selected>8,000–12,000</option>
-                  <option value="high">12,001–18,000</option>
-                  <option value="vhigh">&gt; 18,000</option>
-                </select>
-              </div>
-            </div>
-          <div class="checkRow">
-              <input type="checkbox" id="fullCov_1" name="Vehicle 1 Full coverage" checked />
-              <span class="checkLabel">Full coverage (Comp + Collision)</span>
-              <span class="tipIcon" title="Recommended for vehicles less than 15 years old. Uncheck to remove Comp & Collision from the estimate.">i</span>
-              <span class="recBadge" style="display:none;">Recommended</span>
-            </div>
-</div>
 
+
+
+
+
+
+            </p>
         </div>
-        <div class="actionsRow">
-          <button type="button" class="miniBtn" id="addVehicleBtn">+ Add another vehicle</button>
-        </div>
-
-        <!-- Policy -->
-        <div class="policyBox" id="policyBox">
-          <div class="policyTitleRow">
-            <div class="sectionTitle" style="margin:0;">Policy options</div>
-            <div class="policyBadge">Coverage choices</div>
-          </div>
-
-        <div class="row">
-          <div>
-            
-<label for="limitPkg">Liability limits</label>
-
-<select id="limitPkg" name="Liability limits" required>
-              <option value="15/30/5" selected>15/30/5</option>
-              <option value="25/50/25">25/50/25</option>
-              <option value="50/100/50">50/100/50</option>
-              <option value="100/300/100">100/300/100</option>
-              <option value="250/500/250">250/500/250</option>
-            </select>
-
-          </div>
-          <div>
-            
-<label for="tort">Tort option</label>
-
-<select id="tort" name="Tort option" required>
-              <option value="limited" selected>Limited Tort </option>
-              <option value="full">Full Tort</option>
-            </select>
-
-          </div>
-        </div>
-
-
-<div class="row">
-  <div>
-   <div>
-    <label for="deductible">Comp/Coll Deductible</label>
-    <select id="deductible" name="Deductible (Comp/Coll)" required>
-      <option value="250">250</option>
-      <option value="500" selected>500</option>
-      <option value="1000">1000</option>
-      <option value="1500">1500</option>
-      <option value="2000">2000</option>
-    </select>
-    <div class="helper">Applies only if any vehicle is marked “Full coverage”.</div>
-  </div>
-</div>
-         
-<div>
-  <div class="helper termStatic">Policy term: <b>6 months</b></div>
-  <label for="term">Policy term</label>
-  <select id="term" name="Policy term" required class="hiddenSelect">
-              <option value="6" selected>6 months</option>
-              <option value="12">12 months</option>
-            </select>
-</div>
-
-          <!-- <div>
-            <label>&nbsp;</label>
-            <div class="helper">Pay-in-full price shown below (15% less than term premium).</div>
-          </div> -->
-        </div>
-        
-        <div class="adjWrap">
-          <div class="adjTitle">Optional Coverages & Discounts</div>
-
-          <div id="policyAdjustments"></div>
-        </div>
-
-        </div>
-
-<label for="notes">Anything else we should know?</label>
-        <textarea id="notes" name="Notes" rows="3" placeholder="Tickets/accidents, business use, garaging details, etc."></textarea>
-        
-      
-<div style="margin-top:18px; padding-top:16px; border-top:1px solid var(--border);">
-
-  <div class="checkRow">
-    <input type="checkbox" id="smsConsent">
-    <span class="checkLabel">
-      I agree to having my information verified
-     </span>
-	<div class="helper_small">
-        By checking this box, you agree to have your auto insurance information verfied by Ephrata Insurance and/or it's affiliates; 
-	which may include insurance history, driving record, and other factors. You will receive an automated SMS/text messages 
-        from 717auto.com to verify it is you. No purchased is required.
-        Msg & data rates may apply. Reply STOP to cancel, HELP for help.
-      </div>
     </div>
-  
-
-  <button type="button" class="btn" id="sendCodeBtn">Send verification code</button>
-
-  <button type="button" class="btn" id="resendCodeBtn" style="display:none; margin-top:10px;">
-    Resend code
-  </button>
-
-  <div id="cooldownText" class="helper"></div>
-
-  <label for="smsCode">Verification code</label>
-  <input type="text" id="smsCode" maxlength="6" placeholder="Enter 6-digit code">
-
-  <button type="button" class="btn" id="verifyCodeBtn">
-    Verify & show my quote
-  </button>
-
-  <div id="smsStatus" class="helper"></div>
-
-  <!-- Firebase phone auth uses this (invisible) reCAPTCHA mount -->
-  <div id="recaptcha-container"></div>
-
-</div>
-
-
-	</form>
-    </div>
-
-    <div class="card" id="lockedEstimateCard" style="display:none;">
-      <h2 style="margin:0 0 8px; font-size:18px;">Estimated Premium</h2>
-	
-      <div class="resultBox">
-        <p class="sub">Verify your phone by text to view your estimate and quote options.</p>
-        <div class="big" style="opacity:.6;">Locked</div>
-        <p class="sub">We’ll text a one-time code. After verification, your estimate will appear here.</p>
-      </div>
-    </div>
-
- <div class="card" id="estimateCard" style="display:none;">
-
-      <h2 style="margin:0 0 8px; font-size:18px; text-align:center;">717auto.com | Ephrata Insurance</h2>
-	
-	<div class="center-box helper">prices as low as online and service as close as main street</div>
-	<div class="center-box">1522 W Main St | Ephrata, PA 17522</div>
-	<div class="center-box"><a href="tel:17174313800" class="no-tel">Phone: 717.431.3800</a></div>
-	<div class="center-box"><a href="sms:17179737657" class="no-tel">Text: 717.973.7657</a></div>
-	<div class="center-box"><a href="https://www.717auto.com" class="no-tel" target="_blank" rel="noopener">www.717auto.com</a>
-</div>
- <div class="resultBox">
-        <p class="sub">Your Selection (option 1)</p>
-        <div class="big" id="estMain1">$—</div>
-        <p class="sub" id="estSub1">Enter details to see an estimate.</p>
-
-        <div class="kpi">
-          <div><b>Monthly (approx.)</b><span id="kpiMonthly1">$—</span></div>
-          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm1">$—</span></div>
-          <div><b>Liability portion</b><span id="kpiLiab1">$—</span></div>
-          <div><b>Comp/Coll portion</b><span id="kpiPhys1">$—</span></div>
-        </div>
-</div>
-
-<div class="resultBox">
-        <p class="sub">Lower Liability (option 2)</p>
-        <div class="big" id="estMain2">$—</div>
-        <p class="sub" id="estSub2">Enter details to see an estimate.</p>
-
-        <div class="kpi">
-          <div><b>Monthly (approx.)</b><span id="kpiMonthly2">$—</span></div>
-          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm2">$—</span></div>
-          <div><b>Liability portion</b><span id="kpiLiab2">$—</span></div>
-          <div><b>Comp/Coll portion</b><span id="kpiPhys2">$—</span></div>
-        </div>
-</div>
-
-<div class="resultBox">
-        <p class="sub">Higher Coverage (option 3)</p>
-        <div class="big" id="estMain3">$—</div>
-        <p class="sub" id="estSub3">Enter details to see an estimate.</p>
-
-        <div class="kpi">
-          <div><b>Monthly (approx.)</b><span id="kpiMonthly3">$—</span></div>
-          <div><b>Pay in full price (save 15%)</b><span id="kpiTerm3">$—</span></div>
-          <div><b>Liability portion</b><span id="kpiLiab3">$—</span></div>
-          <div><b>Comp/Coll portion</b><span id="kpiPhys3">$—</span></div>
-        </div>
-</div>
- 
-<div class="divider"></div>
-        <p class="small">
-          <span class="warn">Important:</span> You will receive a final price via text and/or email once your information is verified. 
-		If you have any questions you may contact us at 717-431-3800 or info@EphrataInsurance.com
-        </p>
- </div>
-
-
-
-        
-
-        
-          
-   
-      </p>
-    </div>
-  </div>
 </div>
 
 
