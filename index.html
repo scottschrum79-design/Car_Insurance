@@ -50,7 +50,16 @@
     background:linear-gradient(90deg,var(--accent),#9d7aff); color:#0b1220; font-weight:700; font-size:15px;
   }
   .btn:disabled { opacity:.5; cursor:not-allowed; }
-  .pill { display:inline-block; padding:6px 10px; border-radius:999px; border:1px solid var(--border); color:var(--muted); font-size:12px; margin-right:8px; }
+    .pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 12px;
+        margin-right: 8px;
+        text-align: center;
+    }
   .resultBox { border-radius:16px; border:1px solid var(--border); padding:14px; background:rgba(255,255,255,.03); }
   .big { font-size:30px; font-weight:800; letter-spacing:.2px; margin:8px 0 2px; }
   .sub { color:var(--muted); margin:0; }
@@ -350,8 +359,13 @@ html, body { -webkit-text-size-adjust: 100%; }
             flex-wrap: wrap;
         }
     }
+   
 
-	
+    /* --- Subtle headline glow --- */
+    .glow-text {
+        text-shadow: 0 0 8px rgba(122,162,255,.55), 0 0 18px rgba(122,162,255,.35);
+    }
+
 </style>
 </head>
 <body>
@@ -369,7 +383,9 @@ html, body { -webkit-text-size-adjust: 100%; }
         <div class="grid">
             <div class="card">
                 <div class="pill">
-                    Get Your Customized Auto Insurance Price is 30 seconds or less.
+                    <span class="glow-text">
+                        Get Your Customized Auto Insurance Price in 30 seconds or less.
+                    </span>
                 </div>
 
 
