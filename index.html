@@ -19,7 +19,7 @@
 
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>717auto.com | Ephrata Insurance (Lead Form)</title>
+<title>717auto.com | Ephrata Insurance</title>
 <style>
   :root {
     --bg:#0b1220; --card:#111a2e; --muted:#9fb0d0; --text:#eef3ff; --accent:#7aa2ff; --good:#5ae6b1; --bad:#ff7a90;
@@ -359,22 +359,72 @@ html, body { -webkit-text-size-adjust: 100%; }
             flex-wrap: wrap;
         }
     }
-   
+    .top-pills .home-pill {
+        background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+        border-color: #9f67ff;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 0 14px rgba(139,92,246,.45);
+        animation: homeGlow 2.5s infinite;
+    }
+
+        .top-pills .home-pill:hover {
+            transform: translateY(-1px) scale(1.03);
+            box-shadow: 0 0 20px rgba(139,92,246,.75);
+        }
+
+    @keyframes homeGlow {
+        0%,100% {
+            box-shadow: 0 0 10px rgba(139,92,246,.35);
+        }
+
+        50% {
+            box-shadow: 0 0 22px rgba(139,92,246,.75);
+        }
+    }
 
     /* --- Subtle headline glow --- */
     .glow-text {
         text-shadow: 0 0 8px rgba(122,162,255,.55), 0 0 18px rgba(122,162,255,.35);
     }
+    .cross-sell-banner {
+        background: rgba(139,92,246,.12);
+        border: 1px solid rgba(139,92,246,.4);
+        color: #ddd;
+        padding: 12px 16px;
+        border-radius: 14px;
+        margin-bottom: 18px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+        .cross-sell-banner a {
+            color: #b794ff;
+            text-decoration: none;
+            font-weight: 800;
+            margin-left: 8px;
+        }
 
 </style>
 </head>
 <body>
+    <div class="cross-sell-banner">
+        🏠 Looking for Home Insurance instead?
+        <a href="https://home.717auto.com">
+            Get a Home Quote →
+        </a>
+    </div>
     <div class="wrap">
         <h1>717auto.com | Ephrata Insurance</h1>
         <p>Prices as low as online and service as close as main street.</p>
      <!-- Top Pill Links -->
         <div class="top-pills">
-            <a href="https://home.717auto.com/" target="_blank" rel="noopener">Home / Property</a>
+            <a href="https://home.717auto.com/"
+               target="_blank"
+               rel="noopener"
+               class="home-pill">
+                🏠 Home / Property
+            </a>
             <a href="https://go.717auto.com/" target="_blank" rel="noopener">Services</a>
             <a href="https://go.717auto.com/location" target="_blank" rel="noopener">Location</a>
             <a href="https://go.717auto.com/faqs" target="_blank" rel="noopener">FAQs</a>
@@ -384,7 +434,7 @@ html, body { -webkit-text-size-adjust: 100%; }
             <div class="card">
                 <div class="pill">
                     <span class="glow-text">
-                        Get Your Customized Auto Insurance Price in 30 seconds or less.
+                        Get Your Customized Auto Insurance Price Instantly. No Annoying Phone Calls, No Telemarketers, No Chatbots. Just local help when you want it.
                     </span>
                 </div>
 
@@ -995,7 +1045,7 @@ const PRICING_ADJUSTMENTS = [
 
   // Discounts (usually %)
   { id: "safe", label: "Accident / Ticket Free", kind: "mult", value: 0.70, defaultChecked: true, group: "Discounts"},
-  { id: "bundle", label: "Bundling Discount", kind: "mult", value: 0.80, defaultChecked: true, group: "Discounts"},
+  { id: "bundle", label: "Home Bundling Discount", kind: "mult", value: 0.80, defaultChecked: true, group: "Discounts"},
   { id: "telematics", label: "Safe Driving App", kind: "mult", value: 0.85, defaultChecked: true, group: "Discounts"},
   { id: "good_student", label: "Good Student", kind: "mult", value: 0.95, defaultChecked: false, group: "Discounts"}
 ];
