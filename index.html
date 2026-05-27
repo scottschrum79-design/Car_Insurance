@@ -1247,9 +1247,11 @@ const physDriverMult = 1 + (driverMult - 1) * 1.25; // youth hits comp/coll hard
   // Multi-car discount (mild, realistic)
   const multiCarMult = (vList.length >= 2) ? 0.92 : 1.00;
 
-  const termPremium = (annualTotal * termFactor) * multiCarMult;
-  const liabilityPortion = (annualLiab * termFactor) * multiCarMult;
-  const physPortion = (annualPhys * termFactor) * multiCarMult;
+  const BASE_PRICE_INCREASE = 1.25; // 25% increase	
+  
+  const termPremium = (annualTotal * termFactor) * multiCarMult * BASE_PRICE_INCREASE;
+  const liabilityPortion = (annualLiab * termFactor) * multiCarMult * BASE_PRICE_INCREASE;
+  const physPortion = (annualPhys * termFactor) * multiCarMult * BASE_PRICE_INCREASE;
 
   // ===== Apply optional add-ons / discounts =====
   // kinds:
