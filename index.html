@@ -540,7 +540,7 @@ html, body { -webkit-text-size-adjust: 100%; }
                                            type="text"
                                            placeholder="MM/DD/YYYY"
                                            inputmode="numeric"
-                                           pattern="\d{2}/\d{2}/\d{4}"
+                                           pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
                                            autocomplete="off"
                                            autocorrect="off"
                                            autocapitalize="off"
@@ -1502,7 +1502,7 @@ function refreshEstimate() {
   		type="text"
   		placeholder="MM/DD/YYYY"
   		inputmode="numeric"
-  		pattern="\d{2}/\d{2}/\d{4}"
+  		pattern="[0-9]{2}/[0-9]{2}/[0-9]{4}"
   		autocomplete="off"
   		autocorrect="off"
   		autocapitalize="off"
@@ -1548,10 +1548,25 @@ function refreshEstimate() {
         card.setAttribute("data-index", String(n));
         const title = card.querySelector(".repeatHead .title");
         if (title) title.textContent = `Driver ${n}`;
-        const dob = card.querySelector('input[type="date"]');
-        const dl = card.querySelector('input[placeholder="Optional"]');
-        if (dob) { dob.id = `dob_${n}`; dob.name = `Driver ${n} birthdate`; }
-        if (dl) { dl.id = `dlNumber_${n}`; dl.name = `Driver ${n} license`; }
+        // Keep IDs, labels and submitted names aligned after removing a driver.
+        const updateField = (selector, id, name) => {
+          const field = card.querySelector(selector);
+          if (!field) return;
+          field.id = id;
+          field.name = name;
+          const label = card.querySelector('label[for="' + selector.slice(1) + '"]');
+          if (label) label.htmlFor = id;
+        };
+        // Use data-field for names; DOB fields have dedicated classes.
+        updateField('[data-field="first"]', `dFirst_${n}`, `Driver ${n} first name`);
+        updateField('[data-field="last"]', `dLast_${n}`, `Driver ${n} last name`);
+        updateField('.dobText', `dob_${n}_text`, `Driver ${n} birthdate`);
+        updateField('.dobISO', `dob_${n}`, `Driver ${n} birthdate (ISO)`);
+        updateField('[data-field="dl"]', `dlNumber_${n}`, `Driver ${n} license`);
+        card.querySelectorAll('label[for]').forEach(label => {
+          const field = label.nextElementSibling;
+          if (field && field.id) label.htmlFor = field.id;
+        });
         const rm = card.querySelector(".removeDriverBtn");
         if (rm) rm.style.display = (n === 1) ? "none" : "inline-flex";
       });
@@ -2365,6 +2380,10 @@ function wireDobText(textId, hiddenId) {
     else t.value = digits;
 
     h.value = mmddyyyyToISO(t.value);
+    // Clear any prior error once the date is corrected; flag invalid complete dates.
+    t.setCustomValidity(t.value.length === 10 && !h.value
+      ? "Enter a valid birthdate (MM/DD/YYYY), age 16–100."
+      : "");
   });
 
   t.addEventListener("blur", () => {
